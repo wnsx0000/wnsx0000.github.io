@@ -1,10 +1,8 @@
 ---
 layout: page
 icon: fas fa-file-alt
-order: 1
+order: 2
 ---
-
-# Documents
 
 These are documents I wrote myself while studying, using Latex or Microsoft Word.
 
@@ -55,6 +53,7 @@ These are documents I wrote myself while studying, using Latex or Microsoft Word
 - [자료구조(정진홍)](/pdf/college/Sophomore/자료구조_정진홍_.pdf)
 - [알고리즘(최지웅)](/pdf/college/Sophomore/알고리즘_최지웅_.pdf)
 - [데이터분석기초_R(최종석)](/pdf/college/Sophomore/데이터분석기초_R__최종석_.pdf)
+
 <!-- - [고급컴퓨터수학(최형광)](/pdf/college/Sophomore/고급컴퓨터수학_최형광_.pdf)
 - [선형대수(김형돈)](/pdf/college/Sophomore/선형대수_김형돈_.pdf) -->
 
@@ -63,6 +62,7 @@ These are documents I wrote myself while studying, using Latex or Microsoft Word
 - [프로그래밍응용및실습(김명호)](/pdf/college/Freshman/프로그래밍응용및실습(김명호)_1학년_2학기.pdf)
 - [이산수학(박제원)](/pdf/college/Freshman/이산수학(박제원)_1학년_2학기.pdf)
 - [리눅스시스템관리(최형광)](/pdf/college/Freshman/리눅스시스템관리(최형광)_1학년_1학기.pdf)
+
 <!-- - [AI와데이터사회(강동구)](/pdf/college/Freshman/AI와데이터사회(강동구)_1학년_2학기.pdf) -->
 <!-- - [창의적공학설계(김영종)](/pdf/college/Freshman/창의적공학설계(김영종)_1학년_2학기.pdf) -->
 <!-- - [컴퓨팅적사고(김완섭)](/pdf/college/Freshman/컴퓨팅적사고(김완섭)_1학년_1학기.pdf) -->

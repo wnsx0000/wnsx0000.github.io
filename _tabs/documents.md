@@ -1,7 +1,7 @@
 ---
 layout: page
 icon: fas fa-file-alt
-order: 5
+order: 1
 ---
 
 # Documents

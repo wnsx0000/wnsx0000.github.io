@@ -4,9 +4,7 @@ icon: fas fa-info-circle
 order: 3
 ---
 
-# Junhyeok Lee
-
-안녕하세요. 저는 숭실대학교 소프트웨어학부에 재학 중인 **이준혁**입니다.  
+안녕하세요. 저는 숭실대학교 소프트웨어학부에 재학 중인 이준혁(Jun-hyeok Lee)입니다.  
 저는 On-device AI, DL/ML, 컴퓨터 구조, 임베디드 시스템 등에 관심이 있으며, 이 웹사이트에서 제가 지금까지 해 온 일들을 확인하실 수 있습니다.
 
 ## 🛠️ Techs that I can use pretty well

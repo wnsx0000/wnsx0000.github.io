@@ -10,7 +10,7 @@ These are documents I wrote myself while studying, using Latex or Microsoft Word
 
 ### CS & Development
 
-- [TinyML and Efficient Deep Learning Computing](/pdf/personal/Dev_CS/TinyML_and_Efficient_Deep_Learning_Computing_Song_Han_.pdf) <img src="https://img.icons8.com/ios-glyphs/16/000000/link.png" alt="link" style="vertical-align:middle;"/>
+- [TinyML and Efficient Deep Learning Computing](/pdf/personal/Dev_CS/TinyML_and_Efficient_Deep_Learning_Computing_Song_Han_.pdf)
 
 'TinyML and Efficient Deep Learning Computing(Song Han)(2024-fall)'을 기반으로 정리한 efficient inference(pruning, quantization, NAS, KD, MCUNet) 등 TinyML 관련 내용.
 

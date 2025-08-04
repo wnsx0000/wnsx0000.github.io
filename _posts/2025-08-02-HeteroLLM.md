@@ -3,6 +3,7 @@ title: "HeteroLLM: Accelerating Large Language Model Inference on Mobile SoCs wi
 date: 2025-08-02 22:26:00 +0900
 categories: [Papers, Inference Acceleration]
 tags: [cs, ai, on-device ai]
+math: true
 ---
 해당 논문은 2025년 1월에 arxiv에 올라온 논문으로, 교수님께서 공유해주신 [Awesome-On-Device-AI-Systems](https://github.com/jeho-lee/Awesome-On-Device-AI-Systems/blob/main/README.md)에 소개되어 있어서 읽어보게 되었다. 이 글에서는 단순히 해당 논문의 내용과 주장을 정리하기 때문에, 해당 내용이 사실인지는 별도의 검증과 조사가 필요하다.
 
@@ -12,15 +13,15 @@ Privacy와 response latency 등의 측면을 개선하기 위해, 현재 ai를 m
 
 <!-- 실제로 NPU가 최신 SoC에 많이 들어가고 있는 추세인가? 빠지고 있는 추세는 아닌가? 현존하는 design들이 이걸 잘 못한다는 것이 사실인가? -->
 
-이에 따라 논문에서는 우선 mobile SoC에 대해 성능적 특징을 살펴본다. 이후 저자는 해당 관찰을 통해 **1. prefill phase와 decoding phase 각각에서의 요구사항에 따른 partition strategy와, 2. mobile SoC에서의 빠른 synchronization 기법을 활용하는 inference engine인 HeteroLLM을 제시한다.** HeteroLLM은 layer-level과 tensor-level 모두에 대해서 heterogeneous execution을 지원한다고 한다.
+이에 따라 논문에서는 우선 mobile SoC에 대해 성능적 특징을 살펴본다. 이후 저자는 해당 관찰을 통해 **1. prefill phase와 decoding phase 각각에서의 요구사항에 따른 partition strategy와, 2. mobile SoC에서의 fast synchronization 기법을 활용하는 inference engine인 HeteroLLM을 제시한다.** HeteroLLM은 layer-level과 tensor-level 모두에 대해서 heterogeneous execution을 지원한다고 한다.
 
 ## Introduction
 
 ### 해당 연구의 필요성
 
-앞에서 언급한 것처럼 현재 ai를 스마트폰과 같은 mobile system에서 돌리려는 시도가 이루어지고 있고, 이에 따라 SoC 제조사들은 GPU, NPU와 같이 matrix/vecotr multiplication에서 이점을 가지는 다양한 ai accelerator들을 칩 안에 통합시켜왔다. 하지만 heterogeneous processor들을 활용하는 inference engine에 대한 선행 연구들에서는 아래와 같은 이유로 현재의 mobile platform에 적합하지 않다.
+앞에서 언급한 것처럼 현재 ai를 스마트폰과 같은 mobile system에서 돌리려는 시도가 이루어지고 있고, 이에 따라 SoC 제조사들은 GPU, NPU와 같이 matrix/vecotr multiplication에서 이점을 가지는 다양한 ai accelerator들을 칩 안에 통합시켜왔다. 하지만 heterogeneous processor들을 활용하는 inference engine에 대한 선행 연구들은 아래와 같은 이유로 현재의 mobile platform에 적합하지 않다.
 
-- GPU들과 NPU들을 위한 기존의 synchronization 기법은 LLM inference에 대한 overhead가 크다. 특히 각 kernel의 실행 시간이 수백 ms인 decoding phase에서 overhead가 커진다.
+- GPU들과 NPU들을 위한 기존의 synchron  ization 기법은 LLM inference에 대한 overhead가 크다. 특히 각 kernel의 실행 시간이 수백 ms인 decoding phase에서 overhead가 커진다.
 
 <!-- 이런 processor들은 SoC 안에서 하나의 physical memory를 동시에 활용하게 되기도 한다. -->
 
@@ -63,7 +64,7 @@ Mobile SoC에 대한 분석 결과, 그 하드웨어 architecture적인 특징�
 <!-- 또한 HeteroLLM이 stage performance, order-sensitive performance, shape-sensitive performance를 고려한다고 하는데, 이게 tensor factor인 것 같다. 근데 구체적으로 뭔지는 잘 모르겠다. -->
 
 - tensor-level heterogeneous execution을 위해 prefill phase와 decoding phase 각각에 대해 다른 tensor partition 전략을 활용한다.
-- kernel waiting time을 기반으로 한 빠른 synchronization 기법을 활용한다.
+- kernel waiting time을 기반으로 한 fast synchronization 기법을 활용한다.
 - hardware profiler와 runtime decider를 활용하는 tensor partition solver를 활용한다.
 
 <!-- kernel waiting time이란? -->
@@ -108,13 +109,13 @@ mobile-side inference engine으로는 ONNX Runtime, Llama.cpp, MNN, PPL 등 여�
 
 ## Performance Characteristic
 
-design 이전에 우선 각 accelerator의 architecture적인 특성을 알아보자.
+design을 살펴보기 전에 우선 각 accelerator의 architecture적인 특성을 알아보자.
 
 ### GPU Characteristics
 
 SIMT instuction, on-chip shared memory, SM(Streaming Multiprocessor)을 활용한다는 점에서 mobile GPU는 desktop GPU와 동일하다. 하지만 mobile GPU는 system memmory와 독립된 memory를 활용하는 desktop GPU와는 달리, system memory에 통합되어 있는 UMA(Unified Memory Address Space)를 활용한다.
 
-하지만 OpenCL 등 desktop GPU를 상정하는 framework들은 이런 구조를 반영하고 있지 않아 mobile GPU에 대한 redundancy가 존재한다. 예를 들어, mobile GPU에서는 CPU memory와 GPU memory 사이의 데이터 데이터 전송이 불필요하다.
+그러나 OpenCL 등 desktop GPU를 상정하는 framework들은 이런 구조를 반영하고 있지 않아 mobile GPU에 대한 redundancy가 존재한다. 예를 들어, mobile GPU는 UMA를 활용하므로 CPU memory와 GPU memory 사이의 데이터 데이터 전송이 불필요하다.
 
 <!-- GPU가 SIMT instruction을 어떻게 구현하고 있나? 어떤 연산이 존재하나? -->
 
@@ -154,7 +155,7 @@ NPU에서 가장 중요한 component는 matrix computation unit(ex. systolic arr
 
 - Order-sensitive performance
 
-    $M \times N$ matrix와 $N \times K$ matrix의 multiplication, 그리고 $K \times N$ matrix와 $N \times M$ matrix의 multiplication은 모두 실제 연산량이 $2MNK$로 동일하다. 하지만 NPU에서는 아래의 그래프와 같이 weight tensor가 클수록 성능 저하가 발생한다(오른쪽 matrix가 weight). 이는 weight tensor가 클수록 단일 computing unit으로 처리하는 대신, 해당 computing unit에 값을 load/store하는 것을 반복해야 하기 때문이다.
+    $M \times N$ matrix와 $N \times K$ matrix의 multiplication, 그리고 $K \times N$ matrix와 $N \times M$ matrix의 multiplication은 모두 실제 연산량이 $2MNK$로 동일하다. 하지만 NPU에서는 아래의 그래프와 같이 weight tensor가 클수록 성능 저하가 발생한다(오른쪽 matrix가 weight). 이는 weight tensor가 클수록 단일 computing unit으로 처리하는 대신, 해당 computing unit에 값을 load/store하는 것을 반복하며 연산해야 하기 때문이다.
     
     NPU는 weight stall에 따른 load/store 연산을 줄여 성능을 향상시키므로 이 경우 성능이 떨어지는 것인데, 이를 Order-sensitive Performace라고 한다.
 
@@ -162,7 +163,7 @@ NPU에서 가장 중요한 component는 matrix computation unit(ex. systolic arr
 
 - Shape-sensitive performance
 
-    NPU의 성능은 input tensor의 shape에 의해서도 결정된다. input tensor의 row보다 column이 클수록 성능이 저하되는데, 이는 column의 크기가 weight tensor의 크기에 영향을 미치기 때문이다(오른쪽 matrix가 weight).
+    NPU의 성능은 input tensor의 shape에 의해서도 결정된다. input tensor의 row보다 column이 클수록 성능이 저하되는데, 이는 matrix multiplication이 수행되므로 column의 크기가 weight tensor의 크기에 영향을 미치기 때문이다(오른쪽 matrix가 weight).
 
 <!-- 비율이 왜 중요하다는 것인지 잘 모르겠다..? -->
 
@@ -172,7 +173,23 @@ Qualcomm Snapdragon 8 Gen 3에서 실험한 결과, 아래 그래프와 같이 d
 
 <!-- 이런 것은 실험을 진행한 Qualcomm Snapdragon 8 Gen 3에서만 적용되는 결과일 수 있겠다. 또는 실제로 이렇게 Soc가 설계되는 것인가.-->
 
+![](/assets/img/posts/2025-08-02-HeteroLLM/soc memory bandwidth.png)
+
 ## Deisgn
+
+앞에서 언급한 것처럼 HeteroLLM에서 CPU는 synchroniztaion, GPU kernel scheduling, non-compute intensive task를 처리하는 control plane으로 활용한다. CPU는 LLM task를 처리하기에 적합하지 않고, 다른 application도 처리해야 하므로 모든 power를 사용하지 않는 것으로 했다. 반편 NPU는 특정 상황을 제외하면 LLM task에 대해 GPU보다 성능이 뛰어나므로 primary computing unit으로, GPU는 NPU의 lower bound를 보완하는 secondary computing unit으로 활용한다.
+
+HeteroLLM에서는 GPU-NPU parallelism에 따른 heterogeneous execution을 아래와 같이 layer-level과 tensor-level로 구현한다.
+
+- Layer-level apporach에서는 1. 각 연산을 가장 적절한 backend(GPU or NPU)에 할당한다. 예를 들어, Matrix multiplication은 NPU에, RMSNorm과 SwiGLU는 GPU에 할당한다. 그리고 2. 전형적인 LLM에서는 input에 비해 weigt가 크므로 transpose하여 오른쪽 matrix(weight 위치)에 input(더 작은 쪽)이 오도록 한다.
+
+<!-- RMSNorm과 SwiGLU란? -->
+
+- Tensor-level approach에서는 backend에 따른 partition 전략을 활용하고, solver를 사용하여 최적의 partition solution을 결정하도록 한다.
+
+<!-- solution이란? -->
+
+또한 이 두 approach 모두에 대해 새로운 fast synchronization 기법을 적용하여 GPU, NPU에서의 synchronization overhead를 줄인다.
 
 ### Tensor Partition Strategy
 

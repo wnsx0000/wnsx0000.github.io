@@ -4,7 +4,7 @@ icon: fas fa-file-alt
 order: 2
 ---
 
-공부 중에 Latex과 워드로 직접 작성한 문서들입니다.
+공부 중에 LaTeX과 워드로 직접 작성한 문서들입니다.
 
 ## 🚀 Personal Study
 
@@ -35,29 +35,54 @@ order: 2
 ## 📚 College Study
 
 ### Junior
-- [네트워크프로그래밍(주경호)](/pdf/college/Junior/네트워크프로그래밍_주경호_.pdf)
-- [시스템프로그래밍(한승훈)](/pdf/college/Junior/시스템프로그래밍_한승훈_.pdf)
-- [프로그래밍언어(양승민)](/pdf/college/Junior/프로그래밍언어_양승민_.pdf)
-- [데이터베이스(이상호)](/pdf/college/Junior/데이터베이스_이상호_.pdf)
+- [네트워크프로그래밍(주경호)](/pdf/college/Junior/네트워크프로그래밍_주경호_.pdf)  
+network layer, IPv4, Forwarding, ARP, ICMPv4, unicast routing protocol, transport layer, UDP, TCP, application layer, HTTP, DNS, wirless network 등.
+
+- [시스템프로그래밍(한승훈)](/pdf/college/Junior/시스템프로그래밍_한승훈_.pdf)  
+POSIX, memory representation, linking, process, I/O, shell, memory management, function, signal, synchronization 등.
+
+- [프로그래밍언어(양승민)](/pdf/college/Junior/프로그래밍언어_양승민_.pdf)  
+PL, lexical analysis, syntax analysis, variable(binding), data types, ADT, OOP, concurrency, exception/event handling, subprogram 등.
+
+- [데이터베이스(이상호)](/pdf/college/Junior/데이터베이스_이상호_.pdf)  
+DB, relational data model, SQL, DBMS, DB application development, ER data model, DB design theory 등.
 
 ### Sophomore
-- [운영체제(공영호)](/pdf/college/Sophomore/운영체제_공영호_.pdf)
-- [컴퓨터구조(공영호)](/pdf/college/Sophomore/컴퓨터구조_공영호_.pdf)
-- [데이터통신과네트워크(주경호)](/pdf/college/Sophomore/데이터통신과네트워크_주경호_.pdf)
-- [객체지향프로그래밍(최지웅)](/pdf/college/Sophomore/객체지향프로그래밍_최지웅_.pdf)
-- [자료구조(정진홍)](/pdf/college/Sophomore/자료구조_정진홍_.pdf)
-- [알고리즘(최지웅)](/pdf/college/Sophomore/알고리즘_최지웅_.pdf)
-- [데이터분석기초_R(최종석)](/pdf/college/Sophomore/데이터분석기초_R__최종석_.pdf)
+- [운영체제(공영호)](/pdf/college/Sophomore/운영체제_공영호_.pdf)  
+프로세스, 컴퓨터구조, CPU 스케줄링, 스레드, 동기화, 메모리, 파일시스템 등.
+
+- [컴퓨터구조(공영호)](/pdf/college/Sophomore/컴퓨터구조_공영호_.pdf)  
+성능, 정수/실수의 처리, ISA(RISC-V)의 연산/조건/반복/프로시저, 프로세서의 datapath/pipeline, 메모리/캐시/VM 등.
+
+- [데이터통신과네트워크(주경호)](/pdf/college/Sophomore/데이터통신과네트워크_주경호_.pdf)  
+네트워크, 프로토콜, phyiscal layer(digital/analog transmission, bandwidth utilization, switching), data link layer(error detection/correction, DLC, MAC), IEEE 802 등.
+
+- [객체지향프로그래밍(최지웅)](/pdf/college/Sophomore/객체지향프로그래밍_최지웅_.pdf)  
+java 기본 문법, 객체지향 프로그래밍, 패키지와 class(java.lang, 문자열 처리, Collection 등), 예외처리 등.
+
+- [자료구조(정진홍)](/pdf/college/Sophomore/자료구조_정진홍_.pdf)  
+알고리즘 효율 분석 방법, c++ 기본 문법, 재귀 알고리즘, 스택/큐/덱/리스트/BST/PQ/heap/disjoint set/hash map 등.
+
+- [알고리즘(최지웅)](/pdf/college/Sophomore/알고리즘_최지웅_.pdf)  
+성능 분석, 분할 정복, DP, greedy, backtracking, branch and bound 등.
+
+- [데이터분석기초_R(최종석)](/pdf/college/Sophomore/데이터분석기초_R__최종석_.pdf)  
+R 기본 문법, R 자료구조, 자료 탐색, 전처리, 시각화(ggplot2 등), 문자열 처리, API/공공데이터포털, 군집화, 회귀분석 등.
 
 <!-- - [고급컴퓨터수학(최형광)](/pdf/college/Sophomore/고급컴퓨터수학_최형광_.pdf)
 - [선형대수(김형돈)](/pdf/college/Sophomore/선형대수_김형돈_.pdf) -->
 
 ### Freshman
-- [프로그래밍기초및실습(김명호)](/pdf/college/Freshman/프로그래밍기초및실습(김명호)_1학년_1학기.pdf)
-- [프로그래밍응용및실습(김명호)](/pdf/college/Freshman/프로그래밍응용및실습(김명호)_1학년_2학기.pdf)
-- [이산수학(박제원)](/pdf/college/Freshman/이산수학(박제원)_1학년_2학기.pdf)
-- [리눅스시스템관리(최형광)](/pdf/college/Freshman/리눅스시스템관리(최형광)_1학년_1학기.pdf)
+- [프로그래밍기초및실습(김명호)](/pdf/college/Freshman/프로그래밍기초및실습(김명호)_1학년_1학기.pdf)  
+자료형, 연산자, 조건/반복문, 함수, 배열, 정렬, 문자열 처리, 파일 입출력 등 c 기본 문법.
 
+- [프로그래밍응용및실습(김명호)](/pdf/college/Freshman/프로그래밍응용및실습(김명호)_1학년_2학기.pdf)  
+포인터, 사용자 정의형, 비트 단위 처리, 전처리기, 입출력 등 c 기본 문법.
+
+- [리눅스시스템관리(최형광)](/pdf/college/Freshman/리눅스시스템관리(최형광)_1학년_1학기.pdf)  
+리눅스 명령어/프로세스/파일시스템/부팅/소프트웨어/사용자/네트워크 관리 등.
+
+<!-- - [이산수학(박제원)](/pdf/college/Freshman/이산수학(박제원)_1학년_2학기.pdf) -->
 <!-- - [AI와데이터사회(강동구)](/pdf/college/Freshman/AI와데이터사회(강동구)_1학년_2학기.pdf) -->
 <!-- - [창의적공학설계(김영종)](/pdf/college/Freshman/창의적공학설계(김영종)_1학년_2학기.pdf) -->
 <!-- - [컴퓨팅적사고(김완섭)](/pdf/college/Freshman/컴퓨팅적사고(김완섭)_1학년_1학기.pdf) -->

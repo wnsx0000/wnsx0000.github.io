@@ -136,25 +136,48 @@ mobile GPU의 주요 특징들로는 아래와 같은 것들이 있다.
 
 ### NPU Characteristics
 
-NPU에서 가장 중요한 component는 matrix computation unit(ex. systolic array)로, 아래는 가장 기본적인 systolic array 구조이다. 우선 computation 이전에 PE(Processing Element)에 weight가 preload되고, 이후 weight stall(weight 고정) 상태로 input/activation이 계산된다. 이후 최종 결과는 on-chip SRAM에 저장되거나 다음 systolic array unit에 전달된다. 이런 과정을 통해 NPU는 weight/activation에 대한 load/store 연산과 cycle 수를 줄일 수 있다.
+NPU에서 가장 중요한 component는 matrix computation unit(ex. systolic array)로, 아래는 가장 기본적인 systolic array 구조이다. NPU의 연산 과정에서는 우선 computation 이전에 PE(Processing Element)에 weight가 preload되고, 이후 weight stall(고정) 상태로 input/activation이 계산된다. 이후 최종 결과는 on-chip SRAM에 저장되거나 다음 systolic array unit에 전달된다. 이런 과정을 통해 NPU는 weight/activation에 대한 load/store 연산과 cycle 수를 줄인다.
 
 <!-- load/store 연산이 구체적으로 어떻게 줄어든다는 것인지 궁금하다. -->
 
 ![](/assets/img/posts/2025-08-02-HeteroLLM/systolic array.png)
 
-이런 architecture에 따라, NPU의 성능은 아래와 같이 3가지 특징을 가진다.
+위와 같은 architecture에 따라, NPU의 성능은 아래와 같이 3가지 특징을 가진다.
 
 - Stage performance
 
+    NPU의 hardward computing array(ex. systolic arary)의 크기가 고정되어 있기 때문에, matrix multiplication을 수행해야 하는 tensor의 크기가 computing unit의 크기와 align되지 않으면 해당 unit이 inefficient하게 활용되게 된다. computing unit들을 최적으로 활용하려면 compiler가 tensor를 computing unit 크기에 맞도록 잘 나눠줘야 하고, tensor를 쪼갠 뒤 남는 부분이 생길 경우 연산을 위해 padding을 추가힌다.
+    
+    이에 따라 tensor의 크기에 의해 NPU 성능이 아래의 그래프와 같이 결정된다. 이런 misalignment result를 Stage Performance라고 한다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/stage performance.png)
+
 - Order-sensitive performance
+
+    $M \times N$ matrix와 $N \times K$ matrix의 multiplication, 그리고 $K \times N$ matrix와 $N \times M$ matrix의 multiplication은 모두 실제 연산량이 $2MNK$로 동일하다. 하지만 NPU에서는 아래의 그래프와 같이 weight tensor가 클수록 성능 저하가 발생한다(오른쪽 matrix가 weight). 이는 weight tensor가 클수록 단일 computing unit으로 처리하는 대신, 해당 computing unit에 값을 load/store하는 것을 반복해야 하기 때문이다.
+    
+    NPU는 weight stall에 따른 load/store 연산을 줄여 성능을 향상시키므로 이 경우 성능이 떨어지는 것인데, 이를 Order-sensitive Performace라고 한다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/order sensitive.png)
 
 - Shape-sensitive performance
 
+    NPU의 성능은 input tensor의 shape에 의해서도 결정된다. input tensor의 row보다 column이 클수록 성능이 저하되는데, 이는 column의 크기가 weight tensor의 크기에 영향을 미치기 때문이다(오른쪽 matrix가 weight).
 
+<!-- 비율이 왜 중요하다는 것인지 잘 모르겠다..? -->
 
 ### SoC Memory Bandwidth
 
+Qualcomm Snapdragon 8 Gen 3에서 실험한 결과, 아래 그래프와 같이 decoding phase에서 단일 processor만 사용하는 경우 SoC의 최대 memory bandwidth를 충분히 활용하지 못한다. 즉, NPU-GPU parallelism으로 memory bandwidht를 더욱 활용함으로써 성능 향상을 기대할 수 있다.
+
+<!-- 이런 것은 실험을 진행한 Qualcomm Snapdragon 8 Gen 3에서만 적용되는 결과일 수 있겠다. 또는 실제로 이렇게 Soc가 설계되는 것인가.-->
+
 ## Deisgn
+
+### Tensor Partition Strategy
+
+### Fsat Synchronization
+
 
 ## Evaluation
 

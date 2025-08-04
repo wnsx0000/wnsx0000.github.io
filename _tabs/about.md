@@ -8,7 +8,7 @@ order: 3
 저는 On-device AI, DL/ML, 컴퓨터 구조, 임베디드 시스템 등에 관심이 있으며, 이 웹사이트에서 제가 지금까지 해 온 일들을 확인하실 수 있습니다.
 
 ## 🛠️ Techs that I can use pretty well
-![HuggingFace](https://img.shields.io/badge/huggingface-FFFFFF?style=for-the-badge&logo=huggingface&logoColor=yellow){: .left }
+![HuggingFace](https://img.shields.io/badge/huggingface-FFD21F?style=for-the-badge&logo=huggingface&logoColor=black){: .left }
 ![PyTorch](https://img.shields.io/badge/pytorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white){: .left }
 ![Python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white){: .left }
 ![Linux](https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black){: .left }

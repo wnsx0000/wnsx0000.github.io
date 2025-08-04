@@ -6,7 +6,7 @@ tags: [cs, ai, on-device ai]
 ---
 해당 논문은 2025년 1월에 arxiv에 올라온 논문으로, 교수님께서 공유해주신 [Awesome-On-Device-AI-Systems](https://github.com/jeho-lee/Awesome-On-Device-AI-Systems/blob/main/README.md)에 소개되어 있어서 읽어보게 되었다. 이 글에서는 단순히 해당 논문의 내용과 주장을 정리하기 때문에, 해당 내용이 사실인지는 별도의 검증과 조사가 필요하다.
 
-# Abstract
+## Abstract
 
 Privacy와 response latency 등의 측면을 개선하기 위해, 현재 ai를 mobile system 등에서 on-device로 돌리는 시도가 이루어지고 있다. 현재의 mobile SoC(System on Chip)에서는 이에 따른 computational demand를 만족시키기 위해, GPU, NPU 등 다양한 ai accelerator를 포함한다. 하지만 현존하는 design들은 단일 ai accelerator에 대한 것으로, computation 및 memory bandwidth 측면에서 이런 heterogeneous processor들을 잘 고려해서 최적화하지는 못한다.
 
@@ -14,9 +14,9 @@ Privacy와 response latency 등의 측면을 개선하기 위해, 현재 ai를 m
 
 이에 따라 논문에서는 우선 mobile SoC에 대해 성능적 특징을 살펴본다. 이후 저자는 해당 관찰을 통해 **1. prefill phase와 decoding phase 각각에서의 요구사항에 따른 partition strategy와, 2. mobile SoC에서의 빠른 synchronization 기법을 활용하는 inference engine인 HeteroLLM을 제시한다.** HeteroLLM은 layer-level과 tensor-level 모두에 대해서 heterogeneous execution을 지원한다고 한다.
 
-# Introduction
+## Introduction
 
-## 해당 연구의 필요성
+### 해당 연구의 필요성
 
 앞에서 언급한 것처럼 현재 ai를 스마트폰과 같은 mobile system에서 돌리려는 시도가 이루어지고 있고, 이에 따라 SoC 제조사들은 GPU, NPU와 같이 matrix/vecotr multiplication에서 이점을 가지는 다양한 ai accelerator들을 칩 안에 통합시켜왔다. 하지만 heterogeneous processor들을 활용하는 inference engine에 대한 선행 연구들에서는 아래와 같은 이유로 현재의 mobile platform에 적합하지 않다.
 
@@ -32,28 +32,31 @@ Privacy와 response latency 등의 측면을 개선하기 위해, 현재 ai를 m
 
 이에 따라 heterogeneous processor들을 고려한 efficient inference engine은 여전히 중요한 과제로 남아있다.
 
-## Mobile SoC의 특징
+### Mobile SoC의 특징
 
 Mobile SoC에 대한 분석 결과, 그 하드웨어 architecture적인 특징으로는 아래와 같은 것들이 있다.
 
-- NPU 성능은 tensor-sensitive하다.  
-최적의 조건인 경우에 NPU는 tensor 연산에 대해 GPU보다 높은 성능을 보인다. 하지만 tensor의 order, size, shape 등이 NPU의 하드웨어 architecture에 적합하지 않다면 그 성능은 GPU 수준으로 떨어진다.
+- NPU 성능은 tensor-sensitive하다.
+
+    최적의 조건인 경우에 NPU는 tensor 연산에 대해 GPU보다 높은 성능을 보인다. 하지만 tensor의 order, size, shape 등이 NPU의 하드웨어 architecture에 적합하지 않다면 그 성능은 GPU 수준으로 떨어진다.
 
 <!-- tensor의 order란? NPU의 weight-stall이란? -->
 
-- 생성 비용이 높은 static NPU graph.  
-현재의 mobile NPU는 static computation graph만을 지원하는데, 이는 LLM의 dynamic한 workload와 호환되지 않는다. 또한 NPU의 architecture적인 특성에 따라 최적의 graph를 계산하는 것이 GPU에 비해 더 복잡하고, 런타임에 이를 계산하는 것은 overhead가 크다.
+- 생성 비용이 높은 static NPU graph.
+
+    현재의 mobile NPU는 static computation graph만을 지원하는데, 이는 LLM의 dynamic한 workload와 호환되지 않는다. 또한 NPU의 architecture적인 특성에 따라 최적의 graph를 계산하는 것이 GPU에 비해 더 복잡하고, 런타임에 이를 계산하는 것은 overhead가 크다.
 
 <!-- static computation graph란? graph란 무엇인가? 왜 NPU의 graph를 계산하는 것이 GPU에 비해 더 복잡한 것일까? LLM은 decoding phase에서 동적으로 예측을 수행하기 때뭉네 dynamic하다는 것인가? -->
 
-- 단일 processor의 memory bandwidth restriction.  
-단일 processor만 활용하는 경우 SoC의 memory bandwidth를 만족시키기에는 충분하지 않다.
+- 단일 processor의 memory bandwidth restriction.
+
+    단일 processor만 활용하는 경우 SoC의 memory bandwidth를 만족시키기에는 충분하지 않다.
 
 <!-- SoC의 memory bandwidth란.. 그러면 이건 그냥 시스템의 성능이 충분하지 않다는 말인 거 같다. -->
 
 이런 성능적 특징을 고려했을 때, 특정 상황에서 NPU의 성능이 저하되는 경우 이를 GPU로 보완하는 GPU-NPU parallelism 기법이 유효할 수 있다.
 
-## HeteroLLM
+### HeteroLLM
 
 논문에서 제시하는 inference engine인 HeteroLLM는 mobile SoC에서의 heterogeneous processsing을 지원한다. HeteroLLM에서 CPU는 synchronization, GPU kernel scheduling을 수행하고, NPU는 primary computing unit으로 기능하고, GPU는 NPU의 lower bound를 개선하기 위한 secondary computing unit으로 동작한다. 또한 layer-level과 tensor-level 모두에 대해 GPU-NPU parallelism을 구현하기 위해 HeteroLLM에서는 아래의 기법을 활용한다.
 
@@ -64,6 +67,7 @@ Mobile SoC에 대한 분석 결과, 그 하드웨어 architecture적인 특징�
 - hardware profiler와 runtime decider를 활용하는 tensor partition solver를 활용한다.
 
 <!-- kernel waiting time이란? -->
+
 <!-- tensor partition solver는 partition된 걸 합치는 부분인가? -->
 
 저자는 HeteroLLM을 Arm CPU/GPU/NPU를 사용하는 Qualcomm 8 Gen 3 SoC에 구현했다고 한다. 또한 CPU/GPU를 활용하는 SOTA LLM inference engine인 PPL을 기반으로 구현했고, NPU를 통합하기 위해 Qualcomm의 QNN을 사용했다. 이때 activation에 대한 quantization과 sparsity 기법은 orthogonal하다고 판단하여 실험에서 제외했다.
@@ -72,45 +76,90 @@ Mobile SoC에 대한 분석 결과, 그 하드웨어 architecture적인 특징�
 
 <!-- Qualcomm 8 Gen 3 SoC, PPL, QNN에 대해 알아보자. -->
 
-# Background & Related Work
+## Background & Related Work
 
-## LLM Inference
+### LLM Inference
+
 LLM inference는 prefill phase와 decoding phase로 나뉜다.
 
-- Prefill Phase  
-input 전체를 하나의 batch로 처리하여 첫 번째 token을 생성하는 phase. 이에 따라 matrix-matrix multimplication이 수행되고, computation intensive하다.
+- Prefill Phase
 
-- Decoding Phase  
-autoregressive로 sequential하게 한 번에 하나의 token을 생성하는 phase. 이에 따라 matrix-vector multimplication이 수행되고, memory-intensive하다.
+    input 전체를 하나의 batch로 처리하여 첫 번째 token을 생성하는 phase. 이에 따라 matrix-matrix multimplication이 수행되고, computation intensive하다.
+
+- Decoding Phase
+
+    autoregressive로 sequential하게 한 번에 하나의 token을 생성하는 phase. 이에 따라 matrix-vector multimplication이 수행되고, memory-intensive하다.
 
 <!-- prefill과 decoding이 각각 구체적으로 어떻게 계산되는지 수식을 써보자. memory intensive하다는 것은.. 뭐 당연하긴 하다. -->
 
 mobile에서의 LLM inference의 latency는 TTFT(Time to First Token)와 TPOT(Time per Output Token)으로 구분될 수 있는데, 각각 prefill phase와 decoding phase의 속도에 의해 정해진다.
 
-## Mobile-side Heterogeneous SoC
+### Mobile-side Heterogeneous SoC
+
 앞에서 언급한 것처럼 priviacy와 security, latency 등의 이유로 데이터를 cloud service로 전송하는 대신 LLM을 local device에서 돌리려는 시도가 이루어지고 있다. 이에 따라 주요 제조사들은 CPU, GPU, NPU를 포함하는 heterogenous SoC를 개발하고 있다. ([모바일 SoC 성능 순위 - Nanoreview](https://nanoreview.net/en/soc-list/rating)) 또한 mobile-side에서 이런 processor들은 하나의 physical memory를 공유해 사용하는 경우가 많다.
 
-## Mobile-side Inference Engine
+### Mobile-side Inference Engine
+
 mobile-side inference engine으로는 ONNX Runtime, Llama.cpp, MNN, PPL 등 여러 가지가 있고, 이는 대체로 ONNX format으로 입력을 받아 optimization을 수행하는 식으로 동작한다. 또한 mobile accelerator들을 CPU, GPU, NPU 등의 백엔드로 추상화하고, accelerator의 instruction set과 programming language를 활용해 대응되는 low-level operator를 구현한다.
 
 하지만 기존의 inference engine들은 heterogeneous processer들을 활용하면서 accuracy 하락이 있거나, tensor granularity로는 활용하지 못하는 등의 한계가 존재한다. 또한 GPU-NPU parallelism은 구현하지 못했다.
 
 <!-- CPU, GPU, NPU 등의 백엔드로 추상화한다는 것이 무슨 의미인가.. -->
 
-# Performance Characteristic
+## Performance Characteristic
 
 design 이전에 우선 각 accelerator의 architecture적인 특성을 알아보자.
 
-## GPU Characteristics
+### GPU Characteristics
+
+SIMT instuction, on-chip shared memory, SM(Streaming Multiprocessor)을 활용한다는 점에서 mobile GPU는 desktop GPU와 동일하다. 하지만 mobile GPU는 system memmory와 독립된 memory를 활용하는 desktop GPU와는 달리, system memory에 통합되어 있는 UMA(Unified Memory Address Space)를 활용한다.
+
+하지만 OpenCL 등 desktop GPU를 상정하는 framework들은 이런 구조를 반영하고 있지 않아 mobile GPU에 대한 redundancy가 존재한다. 예를 들어, mobile GPU에서는 CPU memory와 GPU memory 사이의 데이터 데이터 전송이 불필요하다.
+
+<!-- GPU가 SIMT instruction을 어떻게 구현하고 있나? 어떤 연산이 존재하나? -->
+
+mobile GPU의 주요 특징들로는 아래와 같은 것들이 있다.
+
+- Linear Performance
+
+    연산하는 tensor의 크기에 따른 GPU의 성능(TFLOPS)은 아래의 그래프와 같다. tensor size가 작을 때 TFLOPS가 linear하게 증가하므로, 연산이 memory-bound이다. 이후 특정 threshold 이후에는 TFLOPS가 더 이상 증가하지 않으며 연산이 computation-bound이다.
+
+<!-- computation/memory bound라는 것은 computation/memory가 해당 상황에서 성능을 결정짓는 병목이라는 뜻이다. -->
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/gpu_linear_performance.png)
+
+- High-cost Synchronization
+
+    GPU에 대한 synchronization은 비용이 높은데, 이는 1. 현재의 GPU framework는 mobile GPU에 대해서도 desktop GPU에서와 같이 API를 호출하도록 구현되어 있고 이에 따라 data size에 관계없이 400 ms 정도의 latency가 발생하기 때문이다. 또한, 2. GPU는 기본적으로 asynchronous model로 설계되어 queue에 kernel을 저장해 두고 연산하는데, synchronization을 적용하면 queue가 비워질 때까지 기다리기 때문에 50~100 ms의 추가적인 latency가 발생하게 된다.
+
+<!-- 두 번째가 문제가 되는 이유가, 원래는 GPU가 asynchronous하게 kernel을 queue에 저장해 두면서 연산을 하는데, synchronization을 적용하는 순간 queue가 완전히 비워지는 것을 기다리게 되고, queue가 완전히 비워진 뒤에 kernel submission을 받으면 submission에 의한 latency를 해당 시점마다 매번 기다려야 되기 때문인가? -->
+
+### NPU Characteristics
+
+NPU에서 가장 중요한 component는 matrix computation unit(ex. systolic array)로, 아래는 가장 기본적인 systolic array 구조이다. 우선 computation 이전에 PE(Processing Element)에 weight가 preload되고, 이후 weight stall(weight 고정) 상태로 input/activation이 계산된다. 이후 최종 결과는 on-chip SRAM에 저장되거나 다음 systolic array unit에 전달된다. 이런 과정을 통해 NPU는 weight/activation에 대한 load/store 연산과 cycle 수를 줄일 수 있다.
+
+<!-- load/store 연산이 구체적으로 어떻게 줄어든다는 것인지 궁금하다. -->
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/systolic array.png)
+
+이런 architecture에 따라, NPU의 성능은 아래와 같이 3가지 특징을 가진다.
+
+- Stage performance
+
+- Order-sensitive performance
+
+- Shape-sensitive performance
 
 
 
-## NPU Characteristics
+### SoC Memory Bandwidth
 
-# Deisgn
+## Deisgn
 
-# Evaluation
+## Evaluation
 
-# Discussion
+## Discussion
 
-# Conclusion
+## Conclusion
+
+

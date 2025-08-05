@@ -19,7 +19,7 @@ order: 3
 ![Spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white){: .left }
 ![VSCode](https://img.shields.io/badge/vsc-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white){: .left }
 ![IntelliJ IDEA](https://img.shields.io/badge/intellijidea-000000?style=for-the-badge&logo=intellijidea&logoColor=white){: .left }
-![LaTeX](https://img.shields.io/badge/latex-008080?style=for-the-badge&logo=latex&logoColor=white){: .left }<br><br><br>
+![LaTeX](https://img.shields.io/badge/latex-008080?style=for-the-badge&logo=latex&logoColor=white){: .left }<br><br><br><br>
 
 <!-- ![Markdown](https://img.shields.io/badge/markdown-000000?style=for-the-badge&logo=markdown&logoColor=white){: .left } -->
 
@@ -31,9 +31,9 @@ order: 3
 
 ## 🏫 History
 - **2018.03.02. ~ 2021.02.** &nbsp; 백영고등학교
-- **2021.03.02. ~ 2022.03.01.** &nbsp; 숭실대학교
+- **2021.03.02. ~ 2022.03.01.** &nbsp; 숭실대학교 소프트웨어학부
 - **2022.04.11. ~ 2023.10.10.** &nbsp; 대한민국 육군
-- **2024.03.02. ~ 현재** &nbsp; 숭실대학교
+- **2024.03.02. ~ 현재** &nbsp; 숭실대학교 소프트웨어학부
 
 ## 🎓 Scholarships
 - 2021-2 백마성적우수장학금 (반액)

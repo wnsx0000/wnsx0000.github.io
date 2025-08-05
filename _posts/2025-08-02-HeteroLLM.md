@@ -137,9 +137,10 @@ mobile GPU의 주요 특징들로는 아래와 같은 것들이 있다.
 
 ### NPU Characteristics
 
-NPU에서 가장 중요한 component는 matrix computation unit(ex. systolic array)로, 아래는 가장 기본적인 systolic array 구조이다. NPU의 연산 과정에서는 우선 computation 이전에 PE(Processing Element)에 weight가 preload되고, 이후 weight stall(고정) 상태로 input/activation이 계산된다. 이후 최종 결과는 on-chip SRAM에 저장되거나 다음 systolic array unit에 전달된다. 이런 과정을 통해 NPU는 weight/activation에 대한 load/store 연산과 cycle 수를 줄인다.
+NPU에서 가장 중요한 component는 matrix computation unit(ex. systolic array)로, 아래의 그림은 가장 기본적인 systolic array의 구조이다. NPU의 연산 과정에서는 우선 computation 이전에 PE(Processing Element)에 weight가 preload되고, 이후 weight stall(고정) 상태로 input/activation이 계산된다. 이후 최종 결과는 on-chip SRAM에 저장되거나 다음 systolic array unit에 전달된다. 이런 과정을 통해 NPU는 weight/activation에 대한 load/store 연산과 cycle 수를 줄인다.
 
 <!-- load/store 연산이 구체적으로 어떻게 줄어든다는 것인지 궁금하다. -->
+<!-- systolic array의 동작은 https://deep-math.tistory.com/29 를 참고했다. -->
 
 ![](/assets/img/posts/2025-08-02-HeteroLLM/systolic array.png)
 
@@ -165,7 +166,9 @@ NPU에서 가장 중요한 component는 matrix computation unit(ex. systolic arr
 
     NPU의 성능은 input tensor의 shape에 의해서도 결정된다. input tensor의 row보다 column이 클수록 성능이 저하되는데, 이는 matrix multiplication이 수행되므로 column의 크기가 weight tensor의 크기에 영향을 미치기 때문이다(오른쪽 matrix가 weight).
 
-<!-- 비율이 왜 중요하다는 것인지 잘 모르겠다..? -->
+<!-- 비율이 왜 중요하다는 것인지 잘 모르겠다..? 이 부분은 다시 알아보자. 
+TPU에 값을 하나씩 넣으므로... 그런건가...?
+-->
 
 ### SoC Memory Bandwidth
 
@@ -191,9 +194,106 @@ HeteroLLM에서는 GPU-NPU parallelism에 따른 heterogeneous execution을 아�
 
 또한 이 두 approach 모두에 대해 새로운 fast synchronization 기법을 적용하여 GPU, NPU에서의 synchronization overhead를 줄인다.
 
+전반적인 실행 흐름은 아래 그림과 같다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/heterollm 실행구조.png)
+
 ### Tensor Partition Strategy
 
-### Fsat Synchronization
+HeteroLLM에서 활용하는 partition strategy는 아래와 같은 것들이 있다. 이는 1. tensor shape에 따른 NPU 성능 저하, 2. 고비용의 static computation graph, 3. SoC memory bandwidth를 고려한 기법들이다.
+
+#### Partition during Prefill Phase
+
+prefill phase에서 적용 가능한 partition strategy로는 이런 것들이 있다.
+
+<!-- 여기에서의 전략들을 prefill phase에서 computation이 병목임을 고려하고 다시 판단해보자. -->
+
+- Row-cutting
+
+    activation-weight multiplication을 전치해서 $W^T A^T$를 연산한다고 하자. 이 경우 만약 sequence length($A^T$의 column)가 짧아지면 stage performance에 의해 NPU의 computational resource를 충분히 활용하지 못한다. 또한 FFN-down은 dimension을 줄이는 layer이므로 $W^T$는 row에 비해 column이 더 큰 matrix이므로, shape-sensitive performance에 의해 성능 저하가 발생한다.
+
+    이런 경우 NPU의 성능은 GPU 수준 또는 그 이하로 떨어지게 되는데, 논문에서는 첫 번째 matrix($W^T$)를 row dimension에 대해 partition하는 Row-cutting을 적용하여 일부는 NPU에서, 다른 일부는 GPU에서 연산하도록 한다. 또한 partition함에 따라 다른 layer의 연산 이전에 GPU/NPU 각각에 의해 연산되는 모든 부분이 완료되었음을 보장하기 위해 synchronizaiton point를 명시적으로 설정한다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/row cutting.png)
+
+<!-- 
+그냥 성능이 떨어지니까 나눠서 일부를 GPU에서 연산하도록 한 것인가? 왜냐하면 NPU-3에서는 row에 비해 column이 커지면 성능이 떨어진다고 했는데, 여기에서는 column이 아니라 row를 잘랐다. 물론 의미적으로 그렇게 하는 게 적절할 거 같기는 한데, 그러면 NPU에서의 성능은 여전히 떨어지는 거 아니냐?
+
+또한 이런 partition 비율은 어떻게 결정되나? 
+뒤에 나오는 sovler는 decoding phase에서의 partition 비율을 결정하는 거 같다..?
+
+load/store 연산을 고려해보자.
+-->
+
+- Sequence-length cutting
+
+    현재의 mobile NPU에서는 dataflow graph compilation을 주로 활용하는데, 이에 따라 mobile NPU에서는 static graph execution만을 지원한다. 즉, kernel initialization 시에 tensor의 size와 shape이 결정될 수 있어야 한다. 또한 아래의 그래프에 따르면 tensor의 크기가 커질수록 kernel optimization에 대한 search space가 넓어져, optimization 비용이 높아진다.
+
+    반면 GPU는 다양한 tensor shape을 처리할 수 있는 여러 kernel implementation을 지원하므로, 임의의 shape을 가지는 tensor를 dynamic하게 처리할 수 있다.
+
+    NPU에서 dynamic input shape을 처리할 수 있도록 하는 기본적인 방법은, predefined tensor shape의 집합을 미리 정의해 두고 input tensor에 padding을 붙여 해당 shape으로 맞춘 뒤 연산하는 것이다. 하지만 이 경우 padding에 의한 추가적인 computational overhead가 발생한다. 예를 들어, sequence length가 130인 경우 256에 맞추기 위해 padding을 126만큼 추가하고 이를 연산해야 한다.
+
+    이에 따라 논문에서는 아래 두 번째 그림과 같이 Sequence-length cutting을 적용하여, NPU에서는 fixed-size tensor를 연산하도록 하고, GPU에서는 dynamic-shape tensor를 연산하도록 한다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/optimization and shape.png)
+
+<!-- 왜 mobile NPU에서는 static computation graph만을 사용하나? dataflow graph compilation[1, 7, 52] 때문이라는데, 잘 모르겠다.
+이게 뭐임?
+
+inference engine에서 이런 방식을 차용하는 거 같다.
+tensor shape과 sequence length에 따라 kerenl optimization 비용이 높아진다고 한다. 이건 graph 생성에 포함된 과정인가?
+search space가 넓어져서 그렇다는데? 작은 거보다는 아무래도.. 최적화 경우의 수가 많아지니까..?
+어떤 원리로 graph가 생성되는지 모르겠다. 그래서 왜 비용이 커지는지도 모르겠다.
+또한 왜 predefined된 graph를 활용하는 것에 이점이 있는지도 잘 모르겠다. 해당 크기에 대한 최적화 방식이 정해져 있는 것인가.
+
+NPU inference engine에서 이런 방식을 활용하고 있고, 구체적인 최적화 방식까지 알기는 어려울 거 같다.
+
+gpu에서는 여러 kernel implementation을 제공한다고 하는데, 어떤 거길래 다양한 shape에 대해 유효한건가?
+이것 또한 GPU inference engine에 대한 내용 같다.
+-->
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/partition.png)
+
+- Multi-sequence-lenght cutting
+
+    linear performance에서 확인했듯이, GPU에서도 sequence length가 threshold를 넘어가면 computation이 병목이 된다. 
+    
+    이에 따라 위 그림과 같이 input tensor를 한 번이 아니라 여러 번 predefined shape으로 쪼개는 Multi-sequence-length cutting을 활용할 수 있다. 이 경우 여러 개의 predefined shape으로 tensor를 쪼개 TPU에서 연산하도록 하고, 임의의 shape을 가지는 마지막 tensor를 GPU에서 연산하도록 한다.
+
+- Hybrid-cutting
+
+    위 그림과 같이 row-cutting과 sequence-length cutting을 함께 활용하는 Hybrid-cutting도 가능하다. 이 경우 row-cutting에 의해 나눠진 GPU 연산 부분에서는 단순히 연산하면 되고, NPU 연산 부분에서는 padding을 추가해 연산한다.
+
+<!-- 근데 의문이, GPU를 secondary하게 활용하는데, 좀 더 적극적으로 활용하면 성능이 더 좋은 거 아닌가? 
+그리고, GPU 활용에 따른 overhead는 존재하지 않는가? -->
+
+#### Partition during Decoding Phase
+
+prefill phase와는 달리 decoding phase는 memory bandwidth가 병목이다. 앞서 본 관찰에서 알 수 있듯이, 단일 processor를 활용하는 경우 SoC의 전체 memory bandwidth를 충분히 활용하지 못하므로 NPU와 GPU를 모두 사용하도록 한다. 이때 input token의 sequence length는 기본적으로 1(물론 speculative decoding 등을 사용하면 n)로 고정되므로, NPU computation graph를 predefine할 수 있다.
+
+이에 따라 NPU computation graph에 대한 overhead는 고려할 필요가 없고, row-cutting을 적용해 TPU/GPU에 의한 memory bandwidth 활용을 최대화한다. 여기에서의 row-cutting은 prefill에서와 같이 computation 측면에서의 최적화라기보단, memory bandwidth 측면의 최적화로서 기능한다.
+
+<!-- 마지막 문장에 대해 잘 설명할 수 있을지 다시 생각해보자. -->
+
+또한 아래에서 설명할 partition solver를 사용하여 최적의 partition 정도를 계산한다.
+
+### Fast Synchronization
+
+GPU-NPU parallelism은 실행 시간을 줄이지만 synchronization에 따른 overhead가 추가로 발생할 수 있다. 특히 단일 연산의 실행 시간이 짧은 decoding phase에 그 overhead가 두드러진다. 이에 따라 HeteroLLM은 아래의 두 가지 synchronization 기법을 활용한다.
+
+- mobile SoC에서는 unified memory를 사용하므로 추가적인 data transfer가 필요하지 않다. 그래서 transfomer의 각 연산에 대한 input/output tensor들을 저장하기 위한 dedicated memory pool을 reserve해 활용한다. LLM의 각 layer는 동일한 decoder block 구조를 사용하므로 이 memory를 재사용될 수 있다.
+
+- LLM은 대체로 동일한 연산을 수행하므로 각 layer에 대한 waiting time을 예측할 수 있다. synchronization 대상인 thread는 해당 waiting time만큼 sleep했다가 polling mechanism(실행해도 되는지 반복 확인하는 방식)을 통해 다시 실행하도록 한다. 이때 mobile SoC의 usleep이 가지는 granularity는 80~100 ms 수준으로 정확한 synchronization에는 적합하지 않다. 이에 따라 thread의 sleep이 끝나면 CPU core를 활용해 output tensor가 준비되었는지 flag bit(output tensor가 준비되면 set되도록 구현했다.)에 대한 polling으로 확인한다.
+
+이런 synchronization은 아래 그림과 같이 prefill phase와 decoding phase에서 각각 다른 양상을 보인다. prefill phase에서는 NPU가 computaiton 측면에서 dominant하고 GPU는 덜 활용되므로, 다음 GPU kerenl에 대한 submission은 NPU 연산을 기다려야 한다. 이에 따른 submission overhead가 존재하기는 하는데, 10 ms 정도로 무시할 수 있다고 한다. 반면 decoding phase에서는 GPU가 dominant하고, GPU submission overhead도 적다.
+
+<!-- GPU kernel implementation이 더 안정적이고 memory bandwidth에서 efficient하기 때문에 decoding phase에서 GPU 사용이 dominant하다고 하는데, 이게 잘 이해가 안된다. -->
+
+<!-- NPU는 queue를 쓰고.. 이런 게 없는 것인가? 행렬 곱을 위한 단순한 구조이기 때문? -->
+
+<!-- memory bandwidth를 잘 활용해서 ai 성능을 높이는 것은 좋은데, 시스템의 memory bandwidth를 너무 많이 써버리면 다른 application의 실행은 보장되기 어려울 수도 있겠다. 스마트폰같은 mobile device에서는 하나의 프로그램만 돌리는 게 아닐 거 같은데. -->
+
+### Putting It All Together
 
 
 ## Evaluation

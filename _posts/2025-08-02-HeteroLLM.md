@@ -289,17 +289,120 @@ GPU-NPU parallelism은 실행 시간을 줄이지만 synchronization에 따른 o
 
 <!-- GPU kernel implementation이 더 안정적이고 memory bandwidth에서 efficient하기 때문에 decoding phase에서 GPU 사용이 dominant하다고 하는데, 이게 잘 이해가 안된다. -->
 
-<!-- NPU는 queue를 쓰고.. 이런 게 없는 것인가? 행렬 곱을 위한 단순한 구조이기 때문? -->
+<!-- NPU는 queue를 쓰고.. 이런 게 없는 것인가? 행렬 곱을 위한 단순한 구조이기 때문? 
+NPU는 kernel queue가 없다면 말이 된다.
+-->
 
 <!-- memory bandwidth를 잘 활용해서 ai 성능을 높이는 것은 좋은데, 시스템의 memory bandwidth를 너무 많이 써버리면 다른 application의 실행은 보장되기 어려울 수도 있겠다. 스마트폰같은 mobile device에서는 하나의 프로그램만 돌리는 게 아닐 거 같은데. -->
 
 ### Putting It All Together
 
+앞에서 설명한 design들을 종합적으로 활용하기 위해, HeteroLLM은 성능을 측정하는 profiler와, partition 전략을 결정하는 solver를 활용하여 아래와 같은 과정으로 동작한다.
+
+1. solver가 predefined sequence length들을 활용하여 모델이 사용하는 tensor shape을 확인한다.
+2. solver는 profiler를 사용해 최적의 partition 전략을 결정하고, 실제로 partition한다.
+3. 해당 partition에 따라 각 backend(GPU/TPU)에 대한 computation graph가 생성된다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/heterollm total.png)
+
+이제 profiler와 sovler의 동작에 대해 더 구체적으로 알아보자.
+
+#### Performance Profiler
+
+profiler는 각 heterogeneous processor에 대한 성능을 측정하는 부분으로, profiler는 real-execution mode와 prediction mode가 존재한다.
+
+- real-execution mode는 다양한 shape의 tensor에 대해 target 연산을 실제로 실행해 성능을 측정하는 방식이다. 당연하게도 time-consuming하지만 실제 값을 얻을 수 있고, offline으로 우선 처리될 수 있다. 또한 NPU의 stage performance에 따라 search space를 효과적으로 줄일 수 있다.
+
+- prediction mode는 target 연산의 성능을 예측하는 방식이다. tree regression같은 전통적인 ML 기법을 사용해 다양한 shape의 tensor에 대해 성능을 예측할 수 있다. 또한 GPU는 NPU에 비해 더 안정적이고, shape에 비교적 independent한 성능을 보이므로 성능 예측이 더 용이하다.
+
+#### Tensor Partition Solver
+
+solver는 profiler의 결과를 활용해 GPU-only vs. NPU-only vs. GPU-NPU parallelism 중 뭐가 최적인지 판단한다. GPU-NPU parallelism을 활용하는 경우 모든 가능한 partition 방법들을 비교하며 어떤 partition 전략을 활용할 것인지도 결정한다. 이에 따라 solver가 최적화해야 하는 전체 실행 시간에 대한 objective function은 아래와 같이 계산된다. 이때 GPU와 NPU를 함께 사용하는 경우 kernel submission(sync)과 activation transfer(copy) 또한 고려함을 알 수 있다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/obj 수식.png)
+
+<!-- 근데 왜 NPU만 활용하는 경우에도 sync, copy cost가 발생하는지 모르겠다. 여기에서의 NPU-only는 matrix multiplication 연산에서의 NPU-only를 말하는 것 같다. 이 경우에도 SwiGLU, norm 부분 등은 GPU가 연산하므로 sync, copy cost가 발생한다. -->
+
+#### Inference Engine
+
+위의 과정은 offline으로 수행되고, 이후 inference 시에도 control plane(CPU)는 kernel이 GPU-only vs. NPU-only vs. GPU-NPU parallelism 중 어떻게 실행될지를 phase와 sequence lenght를 고려해서 결정한다. 또한 fast synchronization을 적용하고, GPU/NPU kernel에 의해 사용되는 shared memroy pool도 관리한다.
 
 ## Evaluation
 
-## Discussion
+저자는 HeteroLLM을 SOTA mobile-side inference enigine인 PPL(CPU/GPU)을 기반으로 하고, QNN-NPU(NPU) library를 사용해 NPU에 대한 부분을 구현했다. 또한 이는 Qualcomm 8 Gen 3에서 구현되었다. 
 
-## Conclusion
+이때 model quantization으로는 W4A16(weight-only)을 적용하여 float computation과 int4 weight storage를 사용했다. 논문에서는 물론 inference engine들에서 weight/activation sparsity나 NPU에 대해 int computation을 활용하기도 하지만, HeteroLLM은 accuracy 손실 없이 efficient한 GPU-NPU parallelism에 대한 성능을 입증하는 데에 목적이 있다고 한다. 또한 이런 sparse inference가 자신들의 방식과는 orthogonal하다고 주장한다.
 
+이에 따라 실험에서는 dense computation을 사용하는 inference engine들과 비교를 수행했다. llama.cpp(CPU), MLC(GPU), MNN(GPU) 등과 비교를 수행했고, prefill phase에서 layer-level 기법만 활용하는 경우 각각 25.1×, 7.27×, 3.18×배의 성능 향상을, tensor-level 기법까지 활용하는 경우 40%만큼의 추가적인 성능 향상을 보였다. 또한 decoding phase에서 tensor-level 기법까지 활용하는 경우 최대 23.4%만큼의 성능 향상을 보였다고 한다.
+
+<!-- quantization하지 않은 거... 체리피킹한 거 아냐? 
+그리고 GPU와 NPU를 모두 활용하는 engine과도 비교해야 하는 거 아닌가?
+다른 engine들에서 tensor level partition을 활용하는지 궁금하다. 느낌상 layer level partition을 이미 있을 거 같다.
+이 논문의 의의가 tensor level partition을 활용했다는 것에 있을 거 같다.
+-->
+
+### Prefill Performance
+
+mobile-side NPU에서는 static graph execution만을 지원하므로, input token의 sequence length가 NPU에 대해 align되어 있는지에 따라 성능 비교를 수행했다.
+
+- Aligned Sequence Length
+
+    아래의 그래프와 같이 여러 모델과 sequence length에 대해 비교를 수행했다. layer-level 기법만을 적용한 HeteroLLM, 그리고 tensor-level 기법까지 적용한 HeteroLLM을 사용해 실험한 결과, 모든 경우에서 높은 성능을 보임을 확인했다.
+
+    layer-level 기법만을 적용한 HeteroLLM의 성능이 더 높으므로, GPU 대신 NPU의 활용도를 높인 것이 computation을 많이 요구하는 연산(ex. matrix multiplication)에 대해 대부분의 경우 더 적절했음을 알 수 있다. 또한 tensor-level 기법까지 적용한 HeteroLLM의 성능이 layer level 기법만을 적용했을 때보다 더 높으므로, 특정 shpae의 tensor에 대해 GPU가 NPU의 성능 저하를 보완했음을 알 수 있다.
+
+    그래프에는 나와있지 않지만 다른 NPU를 활용하는 다른 inference engine보다 HeteroLLM의 성능 또한 더 좋다고 한다. 예를 들어, sequence length 256에 대해 token/s가 2배정도 차이가 난다. 이런 기존의 NPU 활용 inference engine들은 단순히 int computation을 위해 사용했다고 한다.
+
+<!-- 다른 inference engine[59, 63]들은 단순히 NPU을 int 연산을 활용하기 위해 사용했다고 한다. 정말 그런가. 
+-->
+
+- Misaligned Sequence Length
+
+    아래 그래프와 같이 여러 sequence length에 대해 비교를 수행했다. mobile NPU가 static computation graph만을 지원하므로, online-prepare, padding, pipe, 그리고 논문에서 제시한 방식인 tensor-level 기법까지 적용한 HeteroLLM을 비교했다. tensor-level 기법까지 적용한 HeteroLLM의 성능이 가장 뛰어남을 확인했다.
+
+    여기에서 Online-prepare는 각 input sequence length에 대해 매번 새로운 graph를 생성하는 방식, Padding은 특정 standard size(ex. 128, 256)의 graph를 미리 생성해 두고, input에 padding을 추가하여 해당 size에 맞추는 방식, Pipe는 앞에서 설명한 multi-sequence-length cutting 전략을 사용해 standard size를 넘어가는 부분(margin)을 더 작은 부분으로 나눠서 계산하고 남는 부분은 padding을 추가하는 방식이다.
+
+    이 결과에 따라 매번 graph를 계산하는 것의 overhead가 크다는 점, 단순 padding을 사용하면 step-wise하게 latency가 증가한다는 점, 남는 부분을 standard size에 맞는 더 작은 부분으로 나눴을 때 latency가 더 적다는 점 등을 알 수 있다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/prefill perf.png)
+
+<!--
+hetero tensor는 그냥 HeteroLLM의 방법론을, Padding과 Pipe는 해당 방식만을 적용한 방법론을 말하는 거 같다.
+-->
+
+### Decoding Performance
+
+아래 그래프와 같이 여러 모델에 대해 decoding speed에 대한 비교를 수행했다. HeteroLLM은 decoding phase에 NPU와 GPU를 동시에 사용하는 유일한 engine이고, 실험 결과 Hetero-tensor의 memory bandwidth가 NPU 또는 GPU를 단독으로 활용할 때보다 높기 때문에 성능 또한 높은 것으로 판단된다고 한다.
+
+decoding phase에서는 input sequence length가 짧아서 NPU 성능이 대체로 GPU보다 느리다. 이에 따라 layer-level 기법만을 활용하는 HeteroLLM의 경우 solver가 항상 NPU 대신 GPU만을 선택하여 PPL과 유사한 성능이 나온다고 한다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/decoding perf.png)
+
+<!-- Hetero-layer에서도 GPU, NPU, GPU-NPU 선택이 이뤄지는 것인가? 만약 그렇다면 모든 layer에 대해서 이게 수행되나?
+구현 디테일을 알 수가 없네..
+
+즉, decoding phase에서 개별 성능만 놓고 보면 GPU > NPU인데, memory bandwidth를 더 활용하므로 성능이 높다. 그냥 같은 시간 동안 더 많이 연산하니까..
+-->
+
+### Effect of Fast Synchronization
+
+아래의 그래프와 같이 prefill phase, decoding phase 모두에서 fast synchronization 적용 시 성능이 높아졌다.
+
+이때 prefill phase에서는 tensor-level partition이 수행됨에 따라 tensor-level HeteroLLM이 layer-level HeteroLLM보다 더 sensitive했다. 또한 decoding phase에서 각 kernel의 실행 시간이 더 짧으므로 prefill phase보다 sensitive했다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/sync perf.png)
+
+### GPU Interference & Energy Consumption
+
+HeteroLLM을 돌리는 동안 graph rendering 등이 필요한 다른 GPU application에 대한 interference가 얼마나 발생하는지 확인했다. GPU submission queue를 fully-occupy하는 PPL과 달리 HeteroLLM은 GPU capacity를 충분히 남겨두므로 mobile 게임(LOL: Wild Lift를 돌렸다고 한다.)과 함께 잘 돌릴 수 있다고 한다.
+
+NPU에 비해 GPU가 power consumption이 높고, HeteroLLM은 NPU를 primary computing unit으로 활용하므로 아래 그래프와 같이 power consumption이 적다. 또한 energy는 power와 execution time의 곱고, HeteroLLM의 execution time 또한 더 짧으므로 energy consumption도 더 적다.
+
+![](/assets/img/posts/2025-08-02-HeteroLLM/energy con.png)
+
+## Discussion & Conclusion
+
+model에 대한 quentization으로 W4A16만을 사용했지만, int computation을 수행하는 등의 다른 기법을 적용할 수 있을 것으로 기대된다.
+
+HeteroLLM은 NPU의 computation적인 제한을 GPU를 활용해 개선하고, SoC의 memory bandwidth와 static graph 제약을 고려한 inference engine이다.
 

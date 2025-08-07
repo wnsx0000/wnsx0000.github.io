@@ -87,7 +87,7 @@ mobile에서의 LLM inference의 latency는 TTFT(Time to First Token)와 TPOT(Ti
 
 ### Mobile-side Inference Engine
 
-mobile-side inference engine으로는 ONNX Runtime, Llama.cpp, MNN, PPL 등 여러 가지가 있고, 이는 대체로 ONNX format으로 입력을 받아 optimization을 수행하는 식으로 동작한다. 또한 mobile accelerator들을 CPU, GPU, NPU 등의 백엔드로 추상화하고, processor의 instruction set과 programming language를 활용해 대응되는 low-level operator를 구현한다.
+mobile-side inference engine으로는 ONNX Runtime, Llama.cpp, MNN, PPL 등 여러 가지가 있고, 이는 대체로 ONNX format으로 입력을 받아 runtime graph 생성을 위한 optimization을 수행하는 식으로 동작한다. 또한 mobile accelerator들을 CPU, GPU, NPU 등의 백엔드로 추상화하고, processor의 instruction set과 programming language를 활용해 대응되는 low-level operator를 구현한다.
 
 그러나 기존의 inference engine들은 heterogeneous processer들을 활용하지만 accuracy 하락이 존재하거나, tensor-level의 granularity로는 활용하지 못하는 등의 한계가 존재한다. 또한 GPU를 활용하는 engine은 많지만 아직 GPU-NPU parallelism을 잘 구현하진 못했다.
 
@@ -161,7 +161,7 @@ Qualcomm Snapdragon 8 Gen 3에서 실험한 결과, 아래 그래프와 같이 d
 
 HeteroLLM에서는 GPU-NPU parallelism에 따른 heterogeneous execution을 아래와 같이 layer-level과 tensor-level로 구현한다.
 
-- Layer-level apporach에서는 1. 각 연산을 가장 적절한 backend(GPU or NPU)에 할당한다. 예를 들어, Matrix multiplication은 NPU에, RMSNorm과 SwiGLU는 GPU에 할당한다. 그리고 2. 전형적인 LLM에서는 input에 비해 weigt가 크므로 transpose하여 오른쪽 matrix(weight 위치)에 input(더 작은 쪽)이 오도록 한다.
+- Layer-level apporach에서는 1. 각 연산을 가장 적절한 backend(GPU or NPU)에 할당한다. 예를 들어, Matrix multiplication은 NPU에, RMSNorm과 SwiGLU는 GPU에 할당한다. 그리고 2. 전형적인 LLM에서는 input에 비해 weight가 크므로 transpose하여 오른쪽 matrix(weight 위치)에 input(더 작은 쪽)이 오도록 한다.
 
 - Tensor-level approach에서는 backend에 따른 partition 전략을 활용하고, solver를 사용하여 최적의 partition solution을 결정하도록 한다.
 

@@ -21,7 +21,7 @@ Privacy와 response latency 등의 측면을 개선하기 위해, 현재 ai를 m
 
 - GPU와 NPU를 위한 기존의 synchronization 기법은 LLM inference에 대한 overhead가 크다. 특히 각 kernel의 실행 시간이 수백 ms로 특히 짧은 decoding phase에서 overhead가 더욱 커진다.
 
-- NPU는 GPU보다 대체로 높은 성능을 보인다. 예륻 들어, Qualcomm 8 Gen 3에서 GPU는 실제로 2.8 TFLOPS를 보이는데, NPU는 10 TFLOPS를 보인다.
+- NPU는 GPU보다 대체로 높은 성능을 보인다. 예를 들어, Qualcomm 8 Gen 3에서 GPU는 실제로 2.8 TFLOPS를 보이는데, NPU는 10 TFLOPS를 보인다.
 
 - 기존 engine 중에 효율적인 GPU-NPU parallelism, 또는 tensor-level의 parallelism을 구현한 것은 존재하지 않는다.
 
@@ -43,10 +43,10 @@ Mobile SoC에 대한 분석 결과, 그 하드웨어 architecture적인 특징�
 
     현재의 mobile NPU는 static computation graph만을 지원하는데, 이는 LLM의 dynamic한 workload와 호환되지 않는다. 하지만 런타임에 이를 계산하는 것은 overhead가 크다.
 
-    Computation Graph는 모델의 연산과 데이터의 흐름을 나타낸 graph이다. Dynamic Graph는 연산이 dynamic하게 결정될 수 있는 graph로, 임의의 sequence length를 가지는 input을 처리할 수 있다. 반면 Static Graph는 실행 전에 모든 연산 구조가 고정되어야 하는 graph로, 고정된 sequence lenght의 input만을 처리할 수 있다. training 시에는 dynamic graph가 더 유리하지만, inference에서는 매번 동일한 연산을 반복하므로 static graph를 활용하는 것이 다양한 최적화 기법을 적용하기에 유리하다고 한다.
-
+    Computation Graph는 모델의 연산과 데이터의 흐름을 나타낸 graph이다. Dynamic Graph는 연산이 dynamic하게 결정될 수 있는 graph로, 임의의 sequence length를 가지는 input을 처리할 수 있다. 반면 Static Graph는 실행 전에 모든 연산 구조가 고정되어야 하는 graph로, 고정된 sequence length의 input만을 처리할 수 있다. training 시에는 dynamic graph가 더 유리하지만, inference에서는 매번 동일한 연산을 반복하므로 static graph를 활용하는 것이 다양한 최적화 기법을 적용하기에 유리하다고 한다.
+    
     computation graph와 관련된 더 자세한 내용은 ['Computation Graph Optimization 1부 - Computation Graph, 최적화의 출발점'](https://www.allganize.ai/ko/blog-posts-ko/computation-graph-optimization-1)에서 확인할 수 있다.
-
+    
 - 단일 processor의 memory bandwidth restriction.
 
     단일 processor만 사용하는 경우 SoC의 전체 memory bandwidth를 충분히 활용하기 어렵다.
@@ -55,7 +55,7 @@ Mobile SoC에 대한 분석 결과, 그 하드웨어 architecture적인 특징�
 
 ### HeteroLLM
 
-이에 따라 논문에서 제시하는 inference engine인 HeteroLLM은 mobile SoC에서의 heterogeneous processsing을 지원한다. HeteroLLM에서 CPU는 synchronization 및 GPU kernel scheduling 등을 수행하고, NPU는 primary computing unit으로 기능하며, GPU는 NPU의 lower bound를 개선하기 위한 secondary computing unit으로 동작한다. 또한 layer-level과 tensor-level 모두에 대해 GPU-NPU parallelism을 구현하기 위해 HeteroLLM에서는 아래의 기법을 활용한다.
+이에 따라 논문에서 제시하는 inference engine인 HeteroLLM은 mobile SoC에서의 heterogeneous processing을 지원한다. HeteroLLM에서 CPU는 synchronization 및 GPU kernel scheduling 등을 수행하고, NPU는 primary computing unit으로 기능하며, GPU는 NPU의 lower bound를 개선하기 위한 secondary computing unit으로 동작한다. 또한 layer-level과 tensor-level 모두에 대해 GPU-NPU parallelism을 구현하기 위해 HeteroLLM에서는 아래의 기법을 활용한다.
 
 - tensor-level heterogeneous execution을 위해 prefill phase와 decoding phase 각각에 대해 다른 tensor partition 전략을 활용한다.
 - kernel waiting time을 기반으로 한 fast synchronization 기법을 활용한다.
@@ -73,23 +73,23 @@ LLM inference는 prefill phase와 decoding phase로 나뉜다.
 
 - Prefill Phase
 
-    input 전체를 한 번에 처리하여 첫 번째 token을 생성하는 phase. 이에 따라 matrix-matrix multimplication이 수행되고, computation intensive하다(computation이 병목이다.).
-
+    input 전체를 한 번에 처리하여 첫 번째 token을 생성하는 phase. 이에 따라 matrix-matrix multiplication이 수행되고, computation intensive하다(computation이 병목이다.).
+    
 - Decoding Phase
-
-    autoregressive로 sequential하게 한 번에 하나의 token을 생성하는 phase. 이에 따라 matrix-vector multimplication이 수행되고, memory-intensive하다(memory bandwidth가 병목이다.).
-
+    
+    autoregressive로 sequential하게 한 번에 하나의 token을 생성하는 phase. 이에 따라 matrix-vector multiplication이 수행되고, memory-intensive하다(memory bandwidth가 병목이다.).
+    
 mobile에서의 LLM inference의 latency는 TTFT(Time to First Token)와 TPOT(Time per Output Token)으로 구분될 수 있는데, 각각 prefill phase와 decoding phase의 속도에 의해 정해진다.
 
 ### Mobile-side Heterogeneous SoC
 
-앞에서 언급한 것처럼 priviacy와 security, latency 등의 이유로 데이터를 cloud service로 전송하는 대신 LLM을 local device에서 돌리려는 시도가 이루어지고 있다. 이에 따라 주요 제조사들은 CPU, GPU, NPU를 포함하는 heterogenous SoC를 개발하고 있다. ([모바일 SoC 성능 순위 - Nanoreview](https://nanoreview.net/en/soc-list/rating)) 또한 mobile-side에서 이런 processor들은 하나의 physical memory를 공유하도록 구현되는 경우가 많다.
+앞에서 언급한 것처럼 privacy와 security, latency 등의 이유로 데이터를 cloud service로 전송하는 대신 LLM을 local device에서 돌리려는 시도가 이루어지고 있다. 이에 따라 주요 제조사들은 CPU, GPU, NPU를 포함하는 heterogeneous SoC를 개발하고 있다. ([모바일 SoC 성능 순위 - Nanoreview](https://nanoreview.net/en/soc-list/rating)) 또한 mobile-side에서 이런 processor들은 하나의 physical memory를 공유하도록 구현되는 경우가 많다.
 
 ### Mobile-side Inference Engine
 
 mobile-side inference engine으로는 ONNX Runtime, Llama.cpp, MNN, PPL 등 여러 가지가 있고, 이는 대체로 ONNX format으로 입력을 받아 runtime graph 생성을 위한 optimization을 수행하는 식으로 동작한다. 또한 mobile accelerator들을 CPU, GPU, NPU 등의 백엔드로 추상화하고, processor의 instruction set과 programming language를 활용해 대응되는 low-level operator를 구현한다.
 
-그러나 기존의 inference engine들은 heterogeneous processer들을 활용하지만 accuracy 하락이 존재하거나, tensor-level의 granularity로는 활용하지 못하는 등의 한계가 존재한다. 또한 GPU를 활용하는 engine은 많지만 아직 GPU-NPU parallelism을 잘 구현하진 못했다.
+그러나 기존의 inference engine들은 heterogeneous processor들을 활용하지만 accuracy 하락이 존재하거나, tensor-level의 granularity로는 활용하지 못하는 등의 한계가 존재한다. 또한 GPU를 활용하는 engine은 많지만 아직 GPU-NPU parallelism을 잘 구현하진 못했다.
 
 ## Performance Characteristic
 
@@ -97,7 +97,7 @@ design을 살펴보기 전에 우선 각 processor의 architecture적인 특성�
 
 ### GPU Characteristics
 
-SIMT instuction, on-chip shared memory, SM(Streaming Multiprocessor)을 활용한다는 점 등에서 mobile GPU는 desktop GPU와 동일하다. 하지만 system memmory와 별개로 독립된 memory를 활용하는 desktop GPU와는 달리, mobile GPU는 system memory에 통합되어 있는 UMA(Unified Memory Address Space)를 활용한다.
+SIMT instruction, on-chip shared memory, SM(Streaming Multiprocessor)을 활용한다는 점 등에서 mobile GPU는 desktop GPU와 동일하다. 하지만 system memory와 별개로 독립된 memory를 활용하는 desktop GPU와는 달리, mobile GPU는 system memory에 통합되어 있는 UMA(Unified Memory Address Space)를 활용한다.
 
 하지만 OpenCL 등 desktop GPU를 상정하는 framework들은 이런 구조를 반영하고 있지 않아 mobile GPU에 대한 redundancy가 존재한다. 예를 들어, mobile GPU는 UMA를 활용하므로 CPU memory와 GPU memory 사이의 데이터 데이터 전송이 불필요하다.
 
@@ -126,8 +126,8 @@ NPU에서 가장 중요한 component는 matrix computation unit(ex. systolic arr
 위와 같은 architecture에 따라, NPU의 성능은 아래와 같이 3가지 특징을 가진다.
 
 - Stage performance
-
-    NPU의 hardward computing array(ex. systolic arary)의 크기가 고정되어 있기 때문에, matrix multiplication을 수행해야 하는 tensor의 크기가 computing unit의 크기와 align되지 않으면 해당 unit이 inefficient하게 활용되게 된다. computing unit들을 최적으로 활용하려면 compiler가 tensor를 computing unit 크기에 맞도록 잘 나눠줘야 하고, tensor를 쪼갠 뒤 남는 부분이 생길 경우 연산을 위해 padding을 추가힌다.
+    
+    NPU의 hardware computing array(ex. systolic arary)의 크기가 고정되어 있기 때문에, matrix multiplication을 수행해야 하는 tensor의 크기가 computing unit의 크기와 align되지 않으면 해당 unit이 inefficient하게 활용되게 된다. computing unit들을 최적으로 활용하려면 compiler가 tensor를 computing unit 크기에 맞도록 잘 나눠줘야 하고, tensor를 쪼갠 뒤 남는 부분이 생길 경우 연산을 위해 padding을 추가한다.
     
     이에 따라 tensor의 크기에 의해 NPU 성능이 아래의 그래프와 같이 결정된다. 이런 misalignment result를 Stage Performance라고 한다.
 
@@ -151,9 +151,9 @@ Qualcomm Snapdragon 8 Gen 3에서 실험한 결과, 아래 그래프와 같이 d
 
 ![](/assets/img/posts/2025-08-02-HeteroLLM/soc memory bandwidth.png)
 
-## Deisgn
+## Design
 
-앞에서 언급한 것처럼 HeteroLLM에서 CPU는 synchroniztaion, GPU kernel scheduling, non-compute intensive task를 처리하는 control plane으로 활용한다. CPU는 LLM task를 처리하기에 적합하지 않고, 다른 application도 처리해야 하므로 모든 power를 사용하지 않는 것으로 했다. 반편 NPU는 특정 상황을 제외하면 LLM task에 대해 GPU보다 성능이 뛰어나므로 primary computing unit으로, GPU는 NPU의 lower bound를 보완하는 secondary computing unit으로 활용한다.
+앞에서 언급한 것처럼 HeteroLLM에서 CPU는 synchronization, GPU kernel scheduling, non-compute intensive task를 처리하는 control plane으로 활용한다. CPU는 LLM task를 처리하기에 적합하지 않고, 다른 application도 처리해야 하므로 모든 power를 사용하지 않는 것으로 했다. 반편 NPU는 특정 상황을 제외하면 LLM task에 대해 GPU보다 성능이 뛰어나므로 primary computing unit으로, GPU는 NPU의 lower bound를 보완하는 secondary computing unit으로 활용한다.
 
 HeteroLLM에서는 GPU-NPU parallelism에 따른 heterogeneous execution을 아래와 같이 layer-level과 tensor-level로 구현한다.
 
@@ -179,7 +179,7 @@ prefill phase에서 적용 가능한 partition strategy로는 이런 것들이 �
 
     앞에서 언급한 것처럼 activation-weight multiplication은 전치해서 $W^T A^T$로 연산하는 것으로 한다. 이 경우 만약 sequence length($A^T$의 column)가 짧아지면 stage performance에 의해 NPU의 computational resource를 충분히 활용하지 못한다. 또한 FFN-down은 dimension을 줄이는 layer이므로 $W^T$는 row에 비해 column이 더 큰 matrix이므로, shape-sensitive performance에 의해 성능 저하가 발생한다.
 
-    이런 경우 등에서 NPU의 성능은 GPU 수준 또는 그 이하로 떨어지게 되는데, 이때 첫 번째 matrix($W^T$)를 row dimension에 대해 partition하는 Row-cutting을 적용하여 일부는 NPU에서, 다른 일부는 GPU에서 연산하도록 한다. 또한 partition함에 따라 다른 layer의 연산 이전에 GPU/NPU 각각에 의해 연산되는 모든 부분이 완료되었음을 보장하기 위해 synchronizaiton point를 명시적으로 설정한다.
+    이런 경우 등에서 NPU의 성능은 GPU 수준 또는 그 이하로 떨어지게 되는데, 이때 첫 번째 matrix($W^T$)를 row dimension에 대해 partition하는 Row-cutting을 적용하여 일부는 NPU에서, 다른 일부는 GPU에서 연산하도록 한다. 또한 partition 함에 따라 다른 layer의 연산 이전에 GPU/NPU 각각에 의해 연산되는 모든 부분이 완료되었음을 보장하기 위해 synchronizaiton point를 명시적으로 설정한다.
 
     즉, NPU와 GPU에 연산을 나눠 실행하도록 하는데, NPU의 성능에 따라 GPU 활용 정도를 조정한다.
 
@@ -259,7 +259,7 @@ solver는 profiler의 결과를 활용해 GPU-only vs. NPU-only vs. GPU-NPU para
 
 ## Evaluation
 
-저자는 HeteroLLM을 SOTA mobile-side inference enigine인 PPL(CPU/GPU)을 기반으로 구현했고, QNN-NPU(NPU) library를 사용해 NPU에 대한 부분을 구현했다. 또한 이렇게 구현한 inference engine을 Qualcomm 8 Gen 3에서 돌렸다고 한다.
+저자는 HeteroLLM을 SOTA mobile-side inference engine인 PPL(CPU/GPU)을 기반으로 구현했고, QNN-NPU(NPU) library를 사용해 NPU에 대한 부분을 구현했다. 또한 이렇게 구현한 inference engine을 Qualcomm 8 Gen 3에서 돌렸다고 한다.
 
 HeteroLLM이 가지는 의의는 accuracy 손실 없이 빠른 속도를 확보했다는 것이므로, 이를 실험적으로 증명하는 데에 목적이 있다. 이에 따라 model quantization으로는 W4A16(weight-only)을 적용하여 float computation과 int4 weight storage를 사용했다. 또한 accuracy 손실이 없는 inference engine들과의 비교를 위해 llama.cpp(CPU), MLC(GPU), MNN(GPU) 등에 대해 실험했고, prefill phase에서 layer-level 기법만 활용하는 경우 각각 25.1×, 7.27×, 3.18×배의 성능 향상을, tensor-level 기법까지 활용하는 경우 40%만큼의 추가적인 성능 향상을 보였다. 또한 decoding phase에서 tensor-level 기법까지 활용하는 경우 최대 23.4%만큼의 성능 향상을 보였다고 한다.
 
@@ -271,7 +271,7 @@ mobile-side NPU에서는 static graph execution만을 지원하므로, input tok
 
     아래의 그래프와 같이 여러 모델과 sequence length에 대해 비교를 수행했다. layer-level 기법만을 적용한 HeteroLLM, 그리고 tensor-level 기법까지 적용한 HeteroLLM을 사용해 실험한 결과, 모든 경우에서 높은 성능을 보임을 확인했다.
 
-    GPU만 활용한 것보다 layer-level 기법만을 적용한 HeteroLLM의 성능이 더 높으므로, GPU 대신 NPU의 활용도를 높인 것이 computation을 많이 요구하는 연산(ex. matrix multiplication)에 대해 대부분의 경우 더 적절했음을 알 수 있다. 또한 tensor-level 기법까지 적용한 HeteroLLM의 성능이 layer level 기법만을 적용했을 때보다 더 높으므로, 특정 shpae의 tensor에 대해 GPU가 NPU의 성능 저하를 보완했음을 알 수 있다.
+    GPU만 활용한 것보다 layer-level 기법만을 적용한 HeteroLLM의 성능이 더 높으므로, GPU 대신 NPU의 활용도를 높인 것이 computation을 많이 요구하는 연산(ex. matrix multiplication)에 대해 대부분의 경우 더 적절했음을 알 수 있다. 또한 tensor-level 기법까지 적용한 HeteroLLM의 성능이 layer level 기법만을 적용했을 때보다 더 높으므로, 특정 shape의 tensor에 대해 GPU가 NPU의 성능 저하를 보완했음을 알 수 있다.
 
     그래프에는 나와있지 않지만 다른 NPU를 활용하는 다른 inference engine보다 HeteroLLM의 성능 또한 더 좋다고 한다. 예를 들어, sequence length 256에 대해 token/s가 2배정도 차이가 난다. 이런 기존의 NPU 활용 inference engine들은 단순히 int computation을 위해 사용했다고 한다.
 
@@ -321,7 +321,7 @@ NPU에 비해 GPU가 power consumption이 높고, HeteroLLM은 NPU를 primary co
 - Fast synchronization으로 synchronization overhead를 줄였다.
 - Partition solver로 최적의 partition 전략을 결정했다.
 
-이때 model에 대한 quentization으로 W4A16만을 사용했지만, int computation을 수행하는 등의 다른 기법을 적용하여 더욱 가속화할 수 있을 것으로 기대된다.
+이때 model에 대한 quantization으로 W4A16만을 사용했지만, int computation을 수행하는 등의 다른 기법을 적용하여 더욱 가속화할 수 있을 것으로 기대된다.
 
 코드가 배포되어 있지 않아서 디테일한 구현 및 실제 성능은 확인이 어렵다. 특히 solver에 대한 부분이 구체적으로 어떻게 잘 구현되고 실행되는지 궁금하다.
 

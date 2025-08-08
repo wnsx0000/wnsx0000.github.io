@@ -11,8 +11,6 @@ math: true
 
 Privacy와 response latency 등의 측면을 개선하기 위해, 현재 ai를 mobile system 등에서 on-device로 돌리는 시도가 이루어지고 있다. 현재의 mobile SoC(System on Chip)에서는 이에 따른 computational demand를 만족시키기 위해, GPU, NPU 등 다양한 ai accelerator를 포함하고 있다. 하지만 현존하는 design들은 단일 ai accelerator에 대한 것으로, computation 및 memory bandwidth 측면에서 이런 heterogeneous processor들을 잘 고려해서 최적화하지는 못한다.
 
-<!-- 실제로 NPU가 최신 SoC에 많이 들어가고 있는 추세인가? 빠지고 있는 추세는 아닌가? 현존하는 design들이 이걸 잘 못한다는 것이 사실인가? -->
-
 이에 따라 논문에서는 우선 mobile SoC의 heterogeneous processor에 대한 성능적 특징을 분석한다. 이후 저자는 해당 관찰을 통해 **1. prefill phase와 decoding phase 각각에서의 요구사항에 따른 partition strategy와, 2. mobile SoC에서의 fast synchronization 기법을 활용하여**, layer-level과 tensor-level 모두에 대해서 heterogeneous execution을 지원하는 inference engine인 **HeteroLLM**을 제시한다.
 
 ## Introduction
@@ -23,13 +21,15 @@ Privacy와 response latency 등의 측면을 개선하기 위해, 현재 ai를 m
 
 - GPU와 NPU를 위한 기존의 synchronization 기법은 LLM inference에 대한 overhead가 크다. 특히 각 kernel의 실행 시간이 수백 ms로 특히 짧은 decoding phase에서 overhead가 더욱 커진다.
 
-- NPU는 GPU보다 대체로 높은 성능을 보인다. 예륻 들어, Qualcomm 8 Gen 3에서 GPU는 실제로 2.8 TFLOPS를 보이는데, NPU는 10 TFLOPS를 보인다. 이에 따라 NPU와 GPU를 기존의 방식과 같이 단순히 병렬적으로 활용하는 경우 성능 하락이 발생할 수 있다.
+- NPU는 GPU보다 대체로 높은 성능을 보인다. 예륻 들어, Qualcomm 8 Gen 3에서 GPU는 실제로 2.8 TFLOPS를 보이는데, NPU는 10 TFLOPS를 보인다.
 
-<!-- 왜인지 모르겠다. 기존의 방식이 어떤 것인지를 알아야 이해할 수 있을 것 같다. [19. 20. 25]가 해당 논문이라고 한다. -->
+- 기존 engine 중에 효율적인 GPU-NPU parallelism, 또는 tensor-level의 parallelism을 구현한 것은 존재하지 않는다.
 
-- 일부 연구에서는 GPU와 NPU에 대해 mixed-precision을 적용해 sparsity를 활용하는데, 당연하게도 이는 activation/weight에 sparsity가 실제로 존재해야 유의미하다. 반면 최근 연구에서는 LLM이 dense하다는(sparsity가 적다는) 결과를 보인다.
+- 아래 표와 같이 기존의 inference engine들은 NPU를 활용하지 않거나, NPU를 활용하지만 int 연산을 활용하여 속도를 확보한 대신 accuracy 하락이 존재한다.
 
-이에 따라 heterogeneous processor들을 고려한 efficient inference engine은 여전히 중요한 과제로 남아있다.
+![](/assets/img/posts/2025-08-02-HeteroLLM/inference engines.png)
+
+이에 따라 heterogeneous processor들, 특히 NPU를 고려한 efficient inference engine은 여전히 중요한 과제로 남아있다.
 
 ### Mobile SoC의 특징
 
@@ -63,7 +63,7 @@ Mobile SoC에 대한 분석 결과, 그 하드웨어 architecture적인 특징�
 
 저자는 HeteroLLM을 CPU/GPU를 활용하는 SOTA LLM inference engine인 PPL을 기반으로 구현했고, NPU에 대한 처리는 Qualcomm의 QNN을 활용해 구현했다. 또한 이를 Arm CPU/GPU/NPU를 모두 포함하는 SoC인 Qualcomm 8 Gen 3에서 돌렸다고 한다.
 
-결과적으로 HeteroLLM은 billion-scale mobile LLM에 대해 prefill에서 float 연산을 사용하면서 1000 token/s 수준의 성능을 냈고, prefill phase와 decoding phase 모두에서 성능 향상을 보였다.
+결과적으로 HeteroLLM은 billion-scale mobile LLM에 대해 prefill에서 float 연산을 사용하여 성능 하락 없이 가속화하였고, prefill phase와 decoding phase 모두에서 성능 향상을 보였다.
 
 ## Background & Related Work
 
@@ -100,8 +100,6 @@ design을 살펴보기 전에 우선 각 processor의 architecture적인 특성�
 SIMT instuction, on-chip shared memory, SM(Streaming Multiprocessor)을 활용한다는 점 등에서 mobile GPU는 desktop GPU와 동일하다. 하지만 system memmory와 별개로 독립된 memory를 활용하는 desktop GPU와는 달리, mobile GPU는 system memory에 통합되어 있는 UMA(Unified Memory Address Space)를 활용한다.
 
 하지만 OpenCL 등 desktop GPU를 상정하는 framework들은 이런 구조를 반영하고 있지 않아 mobile GPU에 대한 redundancy가 존재한다. 예를 들어, mobile GPU는 UMA를 활용하므로 CPU memory와 GPU memory 사이의 데이터 데이터 전송이 불필요하다.
-
-<!-- GPU가 SIMT instruction을 어떻게 구현하고 있나? 어떤 연산이 존재하나? -->
 
 mobile GPU의 주요 특징들로는 아래와 같은 것들이 있다.
 
@@ -151,8 +149,6 @@ NPU에서 가장 중요한 component는 matrix computation unit(ex. systolic arr
 
 Qualcomm Snapdragon 8 Gen 3에서 실험한 결과, 아래 그래프와 같이 decoding phase에서 단일 processor만 사용하는 경우 SoC의 최대 memory bandwidth를 충분히 활용하지 못한다. 즉, NPU-GPU parallelism으로 memory bandwidht를 더욱 활용함으로써 성능 향상을 기대할 수 있다.
 
-<!-- 이런 것은 실험을 진행한 Qualcomm Snapdragon 8 Gen 3에서만 적용되는 결과일 수 있겠다. 또는 실제로 이렇게 Soc가 설계되는 것인가.-->
-
 ![](/assets/img/posts/2025-08-02-HeteroLLM/soc memory bandwidth.png)
 
 ## Deisgn
@@ -188,12 +184,6 @@ prefill phase에서 적용 가능한 partition strategy로는 이런 것들이 �
     즉, NPU와 GPU에 연산을 나눠 실행하도록 하는데, NPU의 성능에 따라 GPU 활용 정도를 조정한다.
 
 ![](/assets/img/posts/2025-08-02-HeteroLLM/row cutting.png)
-
-<!-- 
-그냥 성능이 떨어지니까 나눠서 일부를 GPU에서 연산하도록 한 것인가? 왜냐하면 NPU-3에서는 row에 비해 column이 커지면 성능이 떨어진다고 했는데, 여기에서는 column이 아니라 row를 잘랐다. 물론 의미적으로 그렇게 하는 게 적절할 거 같기는 한데, 그러면 NPU에서의 성능은 여전히 떨어지는 거 아니냐?
-
-열 방향으로 자를 수도 있을 것 같기는 하다. 이게 더 좋은 방법일지도? 물론 memory는 더 쓰게 되겠지만..
--->
 
 - Sequence-length cutting
 
@@ -235,8 +225,6 @@ GPU-NPU parallelism은 실행 시간을 줄이지만 synchronization에 따른 o
 
 ![](/assets/img/posts/2025-08-02-HeteroLLM/fast sync.png)
 
-<!-- GPU kernel implementation이 더 안정적이고 memory bandwidth에서 efficient하기 때문에 decoding phase에서 GPU 사용이 dominant하다고 하는데, 이게 잘 이해가 안된다. -->
-
 ### Putting It All Together
 
 앞에서 설명한 design들을 종합적으로 활용하기 위해, HeteroLLM은 성능을 측정하는 profiler와, partition 전략을 결정하는 solver를 활용하여 아래와 같은 과정으로 동작한다.
@@ -273,19 +261,7 @@ solver는 profiler의 결과를 활용해 GPU-only vs. NPU-only vs. GPU-NPU para
 
 저자는 HeteroLLM을 SOTA mobile-side inference enigine인 PPL(CPU/GPU)을 기반으로 구현했고, QNN-NPU(NPU) library를 사용해 NPU에 대한 부분을 구현했다. 또한 이렇게 구현한 inference engine을 Qualcomm 8 Gen 3에서 돌렸다고 한다.
 
-이때 model quantization으로는 W4A16(weight-only)을 적용하여 float computation과 int4 weight storage를 사용했다. 논문에서는 물론 inference engine들에서 weight/activation에 대한 sparsity나 NPU에 대해 int computation을 활용하기도 하지만, 앞에서 언급한 것처럼 LLM은 dense하다는 연구들이 존재하고, HeteroLLM은 accuracy 손실 없이 efficient한 GPU-NPU parallelism에 대한 성능을 입증하는 데에 목적이 있다고 한다. 또한 이런 sparse inference가 자신들의 방식과는 orthogonal하다고 주장한다.
-
-이에 따라 실험에서는 dense computation을 사용하는 inference engine들과 비교를 수행했다. llama.cpp(CPU), MLC(GPU), MNN(GPU) 등과 비교를 수행했고, prefill phase에서 layer-level 기법만 활용하는 경우 각각 25.1×, 7.27×, 3.18×배의 성능 향상을, tensor-level 기법까지 활용하는 경우 40%만큼의 추가적인 성능 향상을 보였다. 또한 decoding phase에서 tensor-level 기법까지 활용하는 경우 최대 23.4%만큼의 성능 향상을 보였다고 한다.
-
-<!-- 
-quantization하지 않은 거... 체리피킹한 거 아냐? 
-그리고 GPU와 NPU를 모두 활용하는 engine과도 비교해야 하는 거 아닌가?
-아래 결과를 보면 비교했다고는 하는데, 제대로 명시해 놓은 것이 없다.
-그런 엔진이 없는 걸지도.
-
-다른 engine들에서 tensor level partition을 활용하는지 궁금하다. 느낌상 layer level partition을 이미 있을 거 같다.
-이 논문의 의의가 tensor level partition을 활용했다는 것에 있을 거 같다.
--->
+HeteroLLM이 가지는 의의는 accuracy 손실 없이 빠른 속도를 확보했다는 것이므로, 이를 실험적으로 증명하는 데에 목적이 있다. 이에 따라 model quantization으로는 W4A16(weight-only)을 적용하여 float computation과 int4 weight storage를 사용했다. 또한 accuracy 손실이 없는 inference engine들과의 비교를 위해 llama.cpp(CPU), MLC(GPU), MNN(GPU) 등에 대해 실험했고, prefill phase에서 layer-level 기법만 활용하는 경우 각각 25.1×, 7.27×, 3.18×배의 성능 향상을, tensor-level 기법까지 활용하는 경우 40%만큼의 추가적인 성능 향상을 보였다. 또한 decoding phase에서 tensor-level 기법까지 활용하는 경우 최대 23.4%만큼의 성능 향상을 보였다고 한다.
 
 ### Prefill Performance
 
@@ -331,15 +307,26 @@ decoding phase에서는 input sequence length가 짧아서 NPU 성능이 대체�
 
 HeteroLLM의 prefill phase를 돌리는 동안 graph rendering 등이 필요한 다른 GPU application에 대한 interference가 얼마나 발생하는지 확인했다. GPU submission queue를 fully-occupy하는 PPL과 달리 HeteroLLM은 GPU capacity를 충분히 남겨두므로 mobile 게임(LOL: Wild Lift를 돌렸다고 한다.)과 함께 잘 돌릴 수 있다고 한다.
 
-<!-- decoding phase에서는 GPU가 많이 사용하는 거 같은데, 이 경우에 대한 실험 결과는 나와있지 않다. 굳이 prefill만 한 거면.. 숨긴 걸지도 모르겠다. -->
+고려할 만한 점은, decoding phase에서는 GPU가 많이 사용되는데 이 경우에 대한 실험 결과는 나와있지 않다. decoding phase에는 interference가 존재할 것으로 추정된다.
 
 NPU에 비해 GPU가 power consumption이 높고, HeteroLLM은 NPU를 primary computing unit으로 활용하므로 아래 그래프와 같이 power consumption이 적다. 또한 energy는 power와 execution time의 곱고, HeteroLLM의 execution time 또한 더 짧으므로 energy consumption도 더 적다.
 
 ![](/assets/img/posts/2025-08-02-HeteroLLM/energy con.png)
 
-## Discussion & Conclusion
+## 결론
 
-model에 대한 quentization으로 W4A16만을 사용했지만, int computation을 수행하는 등의 다른 기법을 적용할 수 있을 것으로 기대된다.
+해당 논문에서는 GPU-NPU parallelism을 효율적으로 구현하여 정확도 손실 없이도 빠른 속도를 확보하는 HeteroLLM을 제안했다.
 
-HeteroLLM은 NPU의 computation적인 제한을 GPU를 활용해 개선하고, SoC의 memory bandwidth와 static graph 제약을 고려한 inference engine이다.
+- layer-level/tensor-level heterogeneous execution으로 GPU/NPU를 효율적으로 활용했다.
+- Fast synchronization으로 synchronization overhead를 줄였다.
+- Partition solver로 최적의 partition 전략을 결정했다.
+
+이때 model에 대한 quentization으로 W4A16만을 사용했지만, int computation을 수행하는 등의 다른 기법을 적용하여 더욱 가속화할 수 있을 것으로 기대된다.
+
+코드가 배포되어 있지 않아서 디테일한 구현 및 실제 성능은 확인이 어렵다. 특히 solver에 대한 부분이 구체적으로 어떻게 잘 구현되고 실행되는지 궁금하다.
+
+Qualcomm 8 Gen 3에서만 실험했으므로 하드웨어 종속적인 결과일 수 있다.
+
+이런 partition을 통한 heterogeneous execution을 흥미롭지만, 논리 흐름이 그렇게까지 잘 다듬어진 논문인 것 같지는 않다는 느낌을 받았다.
+
 

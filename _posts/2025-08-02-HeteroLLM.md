@@ -327,6 +327,6 @@ NPU에 비해 GPU가 power consumption이 높고, HeteroLLM은 NPU를 primary co
 
 Qualcomm 8 Gen 3에서만 실험했으므로 하드웨어 종속적인 결과일 수 있다.
 
-이런 partition을 통한 heterogeneous execution을 흥미롭지만, 논리 흐름이 그렇게까지 잘 다듬어진 논문인 것 같지는 않다는 느낌을 받았다.
+NPU 및 computing graph, 그리고 inference engine에서의 최적화에 대해 처음 접했는데, 다양한 하드웨어적 architecture를 고려해서 성능을 향상시킨다는 점이 흥미로웠다. 그러나 이 논문에 대해서는, partition을 통한 heterogeneous execution이라는 method 자체는 독특하지만 논리 흐름이나 결과가 그렇게까지 잘 다듬어진 것 같지는 않다는 느낌을 받았다.
 
 

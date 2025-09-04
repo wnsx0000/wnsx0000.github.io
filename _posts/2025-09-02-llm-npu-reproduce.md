@@ -194,9 +194,11 @@ vsc에서 해당 오류 메시지를 검색해 보니, tokenization_qwen.hpp의 
 
 ## 결과
 
-코드에서 예시로 나와있는 문자열로 실험한 결과 논문 정도는 아니지만 비슷한 수준의 성능이 나온다. sequence length 64, 256, 1024에 대한 perfill latency는 각각 201.087ms, 487.811ms, 1010.18ms였다. 즉, **speed(tokens/s)는 각각 318.27, 524.79, 1013.68**이다. **논문에서는 speed(tokens/s)가 각각 333, 564, 1106**이었는데, 실행할 때마다 값이 조금씩 다른 것을 감안하면 납득할 만한 수치인 것으로 보인다. 다만 논문에서 사용한 SoC는 hexagon v75인 반면, 여기에서 사용한 것은 hexagon v79이므로 실제로는 성능이 비교적 낮을 수 있다.
+코드에서 예시로 나와있는 문자열로 실험한 결과 논문 정도는 아니지만 비슷한 수준의 성능이 나온다. sequence length 64, 256, 1024에 대한 prefill latency는 각각 201.087ms, 487.811ms, 1010.18ms였다. 즉, **speed(tokens/s)는 각각 318.27, 524.79, 1013.68**이다. **논문에서는 speed(tokens/s)가 각각 333, 564, 1106**이었는데, 실행할 때마다 값이 조금씩 다른 것을 감안하면 납득할 만한 수치인 것으로 보인다. 다만 논문에서 사용한 SoC는 hexagon v75인 반면, 여기에서 사용한 것은 hexagon v79이므로 실제로는 성능이 비교적 낮을 수 있다.
 
 물론 NPU 자체의 utilization 수준은 확인할 수 없었지만, 해당 실험 중에 GPU utilization을 찍어보니 거의 0에 가까운 것을 확인할 수 있었다. 또한 논문에서 주장하는 정도의 성능이 나온 것으로 보아 NPU를 적절히 활용하고 있는 것 같다.
+
+아래는 sequence length 64에서의 출력 예시이다.
 
 ```bash
 (base) wnsx0000@aica:~/jhun/llmnpu/llm.npu-AE-ASPLOS25/performance_results/llm.npu/scripts$ ./run_qwen_npu.sh 
@@ -229,7 +231,7 @@ Overall, large language models are a powerful tool for generating human-like tex
 
 여기에서는 artifact 코드 중에 llm.npu의 prefill speed만을 찍어봤고, 다른 baseline engine들과 여러 모델, accuracy 등은 찍어보지 않았는데, 비슷한 과정을 거치며 확인이 가능할 듯하다.
 
-논문에 대한 reproducing은 처음 수행해 봤는데, NPU의 구체적인 profiling은 불가능했지만 inference engine 코드를 읽고 수정해볼 수 있는 괜찮은 기회였다. 또한 소프트웨어 버전을 맞추면서 일부 코드를 수정하는 등의 디버깅을 꽤 했는데, 그런 디버깅 과정에 대해서도 더 능숙해질 수 있었다. 이번엔 android device에서 코드를 돌리느라 별도의 디버깅 툴을 쓰지는 않았는데, 써서 breakpoint 찍고 했으면 더 쉬웠을 거 같다.
+논문에 대한 reproducing은 처음 수행해 봤는데, NPU에 대한 구체적인 profiling은 불가능했지만 mllm 기반의 코드를 읽고 수정해볼 수 있는 괜찮은 기회였다. 또한 소프트웨어 버전을 맞추면서 일부 코드를 수정하는 등의 디버깅을 꽤 했는데, 그런 디버깅 과정에 대해서도 더 능숙해질 수 있었다. 이번엔 android device에서 코드를 돌리느라 별도의 디버깅 툴을 쓰지는 않았는데, 써서 breakpoint 찍고 했으면 더 쉬웠을 거 같다.
 
 <!-- 디버깅은..
 정확히 어느 부분에서 에러가 나는지 함수/메소드 정의를 확인하며 파악한다.

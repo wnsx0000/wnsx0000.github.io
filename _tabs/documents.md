@@ -14,7 +14,7 @@ order: 2
 'TinyML and Efficient Deep Learning Computing(Song Han)(2024-fall)'을 기반으로 정리한  pruning, quantization, NAS, distillation, efficient LLM/ViT/GAN 등 efficient ML/DL 관련 내용
 
 - [인공지능 기초](/pdf/personal/Dev_CS/인공지능_기초.pdf) <span style="font-size:0.9em;color:gray;">(81 pages)</span>  
-'모두를 위한 딥러닝 시즌2-pytorch'와 'ML/DL 강의(서울대 이준석 교수님)(2024-fall)'을 기반으로 정리한 ML, DL, CNN, RNN, trasformer 등 인공지능 관련 내용
+'모두를 위한 딥러닝 시즌2-pytorch'와 'ML/DL 강의(서울대 이준석 교수님)(2024-fall)', 숭실대 김창훈 교수님의 인공지능 수업을 기반으로 정리한 ML, DL, CNN, RNN, trasformer 등 인공지능 관련 내용
 
 - [스프링(김영한)](/pdf/personal/Dev_CS/스프링_김영한_.pdf) <span style="font-size:0.9em;color:gray;">(55 pages)</span>  
 인프런 김영한 강사님의 spring 강의를 기반으로 정리한 HTTP, spring core, spring boot, spring mvc 등 spring 관련 내용

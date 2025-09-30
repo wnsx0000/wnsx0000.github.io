@@ -1,7 +1,7 @@
 ---
 title: "[논문 정리] HeteroLLM: Accelerating Large Language Model Inference on Mobile SoCs with Heterogeneous AI Accelerators"
 date: 2025-08-02 22:26:00 +0900
-last_modified_at: 2025-09-30 11:37:00 +0900
+lastmod: 2025-09-30 11:37:00 +0900
 categories: [Papers, Inference Acceleration]
 tags: [cs, ai, on-device ai]
 math: true

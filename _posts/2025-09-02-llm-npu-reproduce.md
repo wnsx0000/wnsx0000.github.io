@@ -1,7 +1,7 @@
 ---
 title: "[논문 Reproducing] llm.npu Reproducing on Snapdragon 8 elite"
 date: 2025-09-02 16:29:00 +0900
-last_modified_at: 2025-09-30 11:37:00 +0900
+lastmod: 2025-09-30 11:37:00 +0900
 categories: [Papers, Inference Acceleration]
 tags: [cs, ai, on-device ai]
 math: true

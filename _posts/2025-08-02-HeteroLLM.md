@@ -20,7 +20,7 @@ Privacy와 response latency 등의 측면을 개선하기 위해, 현재 ai를 m
 
 ## Introduction
 
-### 해당 연구의 필요성
+### 해당 연구의 필요성 
 
 앞에서 언급한 것처럼 현재 ai를 스마트폰과 같은 mobile system에서 돌리려는 시도가 이루어지고 있고, 이에 따라 SoC 제조사들은 GPU, NPU와 같이 matrix/vector multiplication에서 이점을 가지는 다양한 ai accelerator들을 칩 안에 통합시켜왔다. 하지만 heterogeneous processor들을 활용하는 inference engine에 대한 선행 연구들은 아래와 같은 이유로 현재의 mobile platform에 적합하지 않다.
 

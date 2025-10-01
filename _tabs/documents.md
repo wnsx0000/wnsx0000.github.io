@@ -11,19 +11,19 @@ order: 2
 ### CS & Development
 
 - [TinyML and Efficient Deep Learning Computing](/pdf/personal/Dev_CS/TinyML_and_Efficient_Deep_Learning_Computing_Song_Han_.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span>  
-'TinyML and Efficient Deep Learning Computing(Song Han)(2024-fall)'을 기반으로 정리한  pruning, quantization, NAS, distillation, efficient LLM/ViT/GAN 등 efficient ML/DL 관련 내용
+MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fall)](https://hanlab.mit.edu/courses/2024-fall-65940) 강의를 기반으로 정리한  pruning, quantization, NAS, distillation, efficient LLM/ViT/GAN 등 efficient ML/DL 관련 내용
 
 - [인공지능 기초](/pdf/personal/Dev_CS/인공지능_기초.pdf) <span style="font-size:0.9em;color:gray;">(81 pages)</span>  
-'모두를 위한 딥러닝 시즌2-pytorch'와 'ML/DL 강의(서울대 이준석 교수님)(2024-fall)', 숭실대 김창훈 교수님의 인공지능 수업을 기반으로 정리한 ML, DL, CNN, RNN, trasformer 등 인공지능 관련 내용
+'인공지능(김창훈)' 수업과 [모두를 위한 딥러닝 시즌2-pytorch](https://deeplearningzerotoall.github.io/season2/) 강의, 서울대 이준석 교수님의 [ML/DL(2024-fall)](https://www.youtube.com/watch?v=JpdKTvgrcYQ&list=PL0E_1UqNACXA5u65LBjzFCAVSZ4xuBWqj) 강의를 기반으로 정리한 ML, DL, CNN, RNN, trasformer 등 인공지능 관련 내용
 
 - [기초 Git&Github 활용법](/pdf/personal/Dev_CS/기초_Git_Github_활용법.pdf) <span style="font-size:0.9em;color:gray;">(54 pages)</span>  
-[git 공식 문서](https://git-scm.com/book/ko/v2)와 '오픈소스기반기초설계(김익수)'를 기반으로 정리한 git&github 명령어 및 활용법.
+'오픈소스기반기초설계(김익수)' 수업과 [git 공식 문서](https://git-scm.com/book/ko/v2)를 기반으로 정리한 git&github 명령어 및 활용법
 
 - [스프링(김영한)](/pdf/personal/Dev_CS/스프링_김영한_.pdf) <span style="font-size:0.9em;color:gray;">(55 pages)</span>  
 인프런 김영한 강사님의 spring 강의를 기반으로 정리한 HTTP, spring core, spring boot, spring mvc 등 spring 관련 내용
 
 - [HTML_CSS_Javascript](/pdf/personal/Dev_CS/HTML_CSS_Javascript.pdf) <span style="font-size:0.9em;color:gray;">(54 pages)</span>  
-'코딩 자율학습 HTML+CSS+자바스크립트(김기수)'를 기반으로 정리한 기본 HTML/CSS/Javascript 문법
+'코딩 자율학습 HTML+CSS+자바스크립트(김기수)' 교재를 기반으로 정리한 기본 HTML/CSS/Javascript 문법
 
 
 <!-- - [Doit!깃&깃허브입문](/pdf/personal/Dev_CS/Doit!깃&깃허브입문_1학년_여름방학.pdf) -->
@@ -32,7 +32,7 @@ order: 2
 ### Math
 
 - [프리드버그 선형대수학](/pdf/personal/Math/프리드버그_선형대수학.pdf) <span style="font-size:0.9em;color:gray;">(97 pages)</span>  
-'선형대수학(프리드버그)'를 기반으로 정리한 벡터공간, 선형변환, 행렬, 연립일차방정식, 행렬식, 대각화, 내적공간, 직교화, 직교여공간, 정사영, 스펙트럼 정리 등 선형대수학 관련 내용
+'선형대수학(프리드버그)' 교재를 기반으로 정리한 벡터공간, 선형변환, 행렬, 연립일차방정식, 행렬식, 대각화, 내적공간, 직교화, 직교여공간, 정사영, 스펙트럼 정리 등 선형대수학 관련 내용
 
 ---
 

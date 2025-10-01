@@ -16,11 +16,15 @@ order: 2
 - [인공지능 기초](/pdf/personal/Dev_CS/인공지능_기초.pdf) <span style="font-size:0.9em;color:gray;">(81 pages)</span>  
 '모두를 위한 딥러닝 시즌2-pytorch'와 'ML/DL 강의(서울대 이준석 교수님)(2024-fall)', 숭실대 김창훈 교수님의 인공지능 수업을 기반으로 정리한 ML, DL, CNN, RNN, trasformer 등 인공지능 관련 내용
 
+- [기초 Git&Github 활용법](/pdf/personal/Dev_CS/기초_Git_Github_활용법.pdf) <span style="font-size:0.9em;color:gray;">(54 pages)</span>  
+[git 공식 문서](https://git-scm.com/book/ko/v2)와 '오픈소스기반기초설계(김익수)'를 기반으로 정리한 git&github 명령어 및 활용법.
+
 - [스프링(김영한)](/pdf/personal/Dev_CS/스프링_김영한_.pdf) <span style="font-size:0.9em;color:gray;">(55 pages)</span>  
 인프런 김영한 강사님의 spring 강의를 기반으로 정리한 HTTP, spring core, spring boot, spring mvc 등 spring 관련 내용
 
 - [HTML_CSS_Javascript](/pdf/personal/Dev_CS/HTML_CSS_Javascript.pdf) <span style="font-size:0.9em;color:gray;">(54 pages)</span>  
 '코딩 자율학습 HTML+CSS+자바스크립트(김기수)'를 기반으로 정리한 기본 HTML/CSS/Javascript 문법
+
 
 <!-- - [Doit!깃&깃허브입문](/pdf/personal/Dev_CS/Doit!깃&깃허브입문_1학년_여름방학.pdf) -->
 <!-- - [Dreamhack 강의 요약본](/pdf/personal/Dev_CS/Dreamhack_강의_요약본.pdf) -->

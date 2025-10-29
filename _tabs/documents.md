@@ -25,10 +25,6 @@ MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fal
 - [HTML_CSS_Javascript](/pdf/personal/Dev_CS/HTML_CSS_Javascript.pdf) <span style="font-size:0.9em;color:gray;">(54 pages)</span>  
 '코딩 자율학습 HTML+CSS+자바스크립트(김기수)' 교재를 기반으로 정리한 기본 HTML/CSS/Javascript 문법
 
-
-<!-- - [Doit!깃&깃허브입문](/pdf/personal/Dev_CS/Doit!깃&깃허브입문_1학년_여름방학.pdf) -->
-<!-- - [Dreamhack 강의 요약본](/pdf/personal/Dev_CS/Dreamhack_강의_요약본.pdf) -->
-
 ### Math
 
 - [프리드버그 선형대수학](/pdf/personal/Math/프리드버그_선형대수학.pdf) <span style="font-size:0.9em;color:gray;">(97 pages)</span>  
@@ -39,6 +35,16 @@ MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fal
 ## 📚 College Study
 
 ### Junior
+
+- [(In progress)데이터사이언스(김창훈)](/pdf/college/Junior/데이터사이언스_김창훈_.pdf) <span style="font-size:0.9em;color:gray;">(20 pages)</span>  
+understanding of multiplication, linear equation, vector space, orthogonality 등 선형대수학 관련 내용
+
+- [(In progress)소프트웨어분석및설계(정진홍)](/pdf/college/Junior/소프트웨어분석및설계_정진홍_.pdf) <span style="font-size:0.9em;color:gray;">(41 pages)</span>  
+software analysis and design, requirment analysis, use-case anaylsis, domain model, SSD, package/class/sequence/communication/state-machine/activity diagram, SOLID 등
+
+- [네트워크프로그래밍(주경호)](/pdf/college/Junior/네트워크프로그래밍_주경호_.pdf) <span style="font-size:0.9em;color:gray;">(98 pages)</span>  
+network layer, IPv4, Forwarding, ARP, ICMPv4, unicast routing protocol, transport layer, UDP, TCP, application layer, HTTP, DNS, wirless network 등
+
 - [네트워크프로그래밍(주경호)](/pdf/college/Junior/네트워크프로그래밍_주경호_.pdf) <span style="font-size:0.9em;color:gray;">(98 pages)</span>  
 network layer, IPv4, Forwarding, ARP, ICMPv4, unicast routing protocol, transport layer, UDP, TCP, application layer, HTTP, DNS, wirless network 등
 
@@ -73,9 +79,6 @@ java 기본 문법, 객체지향 프로그래밍, 패키지와 class(java.lang, 
 - [데이터분석기초_R(최종석)](/pdf/college/Sophomore/데이터분석기초_R__최종석_.pdf) <span style="font-size:0.9em;color:gray;">(30 pages)</span>  
 R 기본 문법, R 자료구조, 자료 탐색, 전처리, 시각화(ggplot2 등), 문자열 처리, API/공공데이터포털, 군집화, 회귀분석 등
 
-<!-- - [고급컴퓨터수학(최형광)](/pdf/college/Sophomore/고급컴퓨터수학_최형광_.pdf)
-- [선형대수(김형돈)](/pdf/college/Sophomore/선형대수_김형돈_.pdf) -->
-
 ### Freshman
 - [프로그래밍기초및실습(김명호)](/pdf/college/Freshman/프로그래밍기초및실습(김명호)_1학년_1학기.pdf) <span style="font-size:0.9em;color:gray;">(107 pages)</span>  
 자료형, 연산자, 조건/반복문, 함수, 배열, 정렬, 문자열 처리, 파일 입출력 등 c 기본 문법
@@ -85,20 +88,4 @@ R 기본 문법, R 자료구조, 자료 탐색, 전처리, 시각화(ggplot2 등
 
 - [리눅스시스템관리(최형광)](/pdf/college/Freshman/리눅스시스템관리(최형광)_1학년_1학기.pdf) <span style="font-size:0.9em;color:gray;">(149 pages)</span>  
 리눅스 기본 명령어, 프로세스, 파일시스템, 부팅, 소프트웨어, 사용자, 네트워크 관리 등
-
-<!-- - [이산수학(박제원)](/pdf/college/Freshman/이산수학(박제원)_1학년_2학기.pdf) -->
-<!-- - [AI와데이터사회(강동구)](/pdf/college/Freshman/AI와데이터사회(강동구)_1학년_2학기.pdf) -->
-<!-- - [창의적공학설계(김영종)](/pdf/college/Freshman/창의적공학설계(김영종)_1학년_2학기.pdf) -->
-<!-- - [컴퓨팅적사고(김완섭)](/pdf/college/Freshman/컴퓨팅적사고(김완섭)_1학년_1학기.pdf) -->
-<!-- - [(이론)물리1및실험(김남미, 최현희)](/pdf/college/Freshman/(이론)물리1및실험(김남미,%20최현희)_1학년_1학기.pdf) -->
-
-<!-- --- -->
-
-<!-- ## 💼 Others
-
-- [공학회계(김철환)](/pdf/others/공학회계_김철환_.pdf)
-- [미적분학1(최성자)](/pdf/others/미적분학1_최성자_.pdf)
-- [설득과수사(윤대열)](/pdf/others/설득과수사_윤대열_.pdf)
-- [심리학의이해(심다연)](/pdf/others/심리학의이해(심다연)_1학년_2학기.pdf)
-- [현대인과성서(이혁배)](/pdf/others/현대인과성서(이혁배)_1학년_2학기.pdf) -->
 

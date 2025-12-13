@@ -10,7 +10,7 @@ order: 2
 
 ### CS & Development
 
-- [TinyML and Efficient Deep Learning Computing](/pdf/personal/Dev_CS/TinyML_and_Efficient_Deep_Learning_Computing_Song_Han_.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span>  
+- [TinyML and Efficient Deep Learning Computing](/pdf/personal/Dev_CS/TinyML_and_Efficient_Deep_Learning_Computing_Song_Han_.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span>
 MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fall)](https://hanlab.mit.edu/courses/2024-fall-65940) 강의를 기반으로 정리한  pruning, quantization, NAS, distillation, efficient LLM/ViT/GAN 등 efficient ML/DL 관련 내용
 
 - [인공지능 기초](/pdf/personal/Dev_CS/인공지능_기초.pdf) <span style="font-size:0.9em;color:gray;">(81 pages)</span>  
@@ -36,14 +36,14 @@ MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fal
 
 ### Junior
 
-- [(In progress)데이터사이언스(김창훈)](/pdf/college/Junior/데이터사이언스_김창훈_.pdf) <span style="font-size:0.9em;color:gray;">(20 pages)</span>  
-understanding of multiplication, linear equation, vector space, orthogonality 등 선형대수학 관련 내용
+- [데이터사이언스(김창훈)](/pdf/college/Junior/데이터사이언스_김창훈_.pdf) <span style="font-size:0.9em;color:gray;">(39 pages)</span>  
+understanding of multiplication, linear equation, vector space, orthogonality, determinant, eigen value/vector, decomposition, SVD, pseudo inverse 등 선형대수학 관련 내용과, 이를 활용한 ML 관련 내용
 
-- [(In progress)소프트웨어분석및설계(정진홍)](/pdf/college/Junior/소프트웨어분석및설계_정진홍_.pdf) <span style="font-size:0.9em;color:gray;">(41 pages)</span>  
+- [디자인패턴(정진홍)](/pdf/college/Junior/디자인패턴_정진홍_.pdf) <span style="font-size:0.9em;color:gray;">(48 pages)</span>  
+singleton, factory, abstract factory, builder, prototype 등 creational DP, adapter, bridge, composite, decorator, facade, flyweight, proxy 등 structural DP, CoR, command, interpreter, iterator, state, strategy, mediator, memento, observer, template method, visitory 등 behavior DP 관련 내용
+
+- [소프트웨어분석및설계(정진홍)](/pdf/college/Junior/소프트웨어분석및설계_정진홍_.pdf) <span style="font-size:0.9em;color:gray;">(39 pages)</span>  
 software analysis and design, requirment analysis, use-case anaylsis, domain model, SSD, package/class/sequence/communication/state-machine/activity diagram, SOLID 등
-
-- [네트워크프로그래밍(주경호)](/pdf/college/Junior/네트워크프로그래밍_주경호_.pdf) <span style="font-size:0.9em;color:gray;">(98 pages)</span>  
-network layer, IPv4, Forwarding, ARP, ICMPv4, unicast routing protocol, transport layer, UDP, TCP, application layer, HTTP, DNS, wirless network 등
 
 - [네트워크프로그래밍(주경호)](/pdf/college/Junior/네트워크프로그래밍_주경호_.pdf) <span style="font-size:0.9em;color:gray;">(98 pages)</span>  
 network layer, IPv4, Forwarding, ARP, ICMPv4, unicast routing protocol, transport layer, UDP, TCP, application layer, HTTP, DNS, wirless network 등

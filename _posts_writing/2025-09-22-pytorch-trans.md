@@ -1,7 +1,7 @@
 ---
 title: "[OSSCA] Pytorch 한글화 basic"
 date: 2025-09-16 20:56:00 +0900
-categories: [AI, OSSCA]
+categories: [DL/ML, OSSCA]
 tags: [ai, pytorch]
 math: true
 ---

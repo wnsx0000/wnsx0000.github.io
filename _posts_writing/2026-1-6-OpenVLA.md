@@ -1,5 +1,5 @@
 ---
-title: "[논문 정리] OpenVLA: An Open-Source Vision-Language-Action Model"
+title: "[Paper Review] OpenVLA: An Open-Source Vision-Language-Action Model"
 date: 2026-1-6 16:00:00 +0900
 categories: [Papers, Efficient VLA]
 tags: [ai, VLA]

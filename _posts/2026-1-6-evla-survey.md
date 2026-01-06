@@ -1,5 +1,5 @@
 ---
-title: "[논문 정리] A Survey on Efficient Vision-Language-Action Models"
+title: "[Paper Review] A Survey on Efficient Vision-Language-Action Models"
 date: 2026-1-6 13:25:00 +0900
 categories: [Papers, Efficient VLA]
 tags: [ai, VLA]

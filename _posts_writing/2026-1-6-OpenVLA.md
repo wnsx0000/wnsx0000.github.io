@@ -8,45 +8,33 @@ math: true
 
 지난 번 읽어본 [Efficient VLA survey 논문](https://arxiv.org/abs/2510.24795)에 이어, 이번에는 해당 survey에서 소개하는 여러 논문 중 거의 가장 인용수가 높으면서 그 이름대로 코드와 모델이 오픈소스인 [**OpenVLA**](https://arxiv.org/abs/2406.09246)라는 논문을 읽어봤다. 이 논문은 2024년 9월 초에 arxiv에 올라온 논문으로, 26.1.6. 기준 인용수가 1433회이다.
 
-
-abstraction.
-
-
 ## Introduction
 
-### Motivation
+### Abstract & Motivation
 
-robotics 관련 모델들의 주요 한계는 generalization, robustness가 부족하다는 것이다. 데이터셋 자체가 너무 작다.
+기존 robotics 관련 모델들의 주요 한계는 LLM 등에 비교했을 때 데이터셋 자체가 너무 작아서 generalization, robustness가 부족하다는 것이다. 하지만 internet-scale dataset으로 pretrain된 vision-language foundation model들은 높은 generalization 능력을 가지고 있다. 이에 따라 **pretrained vision-language foundation model들을 core block으로 사용하는 시도**가 이루어지고 있다.
 
-하지만 internet-scale dataset으로 pretrain된 vision&language의 foundation model들은 높은 generalization 능력을 가지고 있다.
+하지만 앞선 연구에서 제안하는 최신 모델들은 **1) 오픈소스가 아니고, 2) 새로운 환경/하드웨어에 deploy하는데에 있어 best practice가 아니라는 한계**가 있다. 이런 배경에서 저자는 generalization 능력을 갖춘 VLA가 기존의 오픈소스 language model들과 같이, 오픈소스여야 하고 효율적인 fine-tuning을 지원해야 한다고 주장한다.
 
-이에 따라 vision&language의 foundation model들을 core block으로 사용하는 시도가 이루어지고 있다.
+**이에 따라 제안되는 OpenVLA는 pretrained vision-language foundation model을 backbone으로 하고, Open X-Embodiment dataset에서 fine-tuning되어 generalization 능력을 갖추었으면서, 오픈소스로 배포된 VLA 모델이다. 또한 LoRA와 quantization을 활용한 효율적인 fine-tuning 및 inference를 지원한다.**
 
-하지만 현재의 모델들은 1) closed이고 2) 새로운 환경이나 하드웨어에 배포 및 적용하는데에 있어서 best practice가 아니라는 한계가 있다.
-
-generalization 능력이 있는 VLA는 기존의 오픈소스 language model들과 같이, 효율적인 fine-tuning을 지원해야 하고 개방되어 있어야 한다고 주장한다.
-
-OpenVLA에서는 visually-conditioned language model을 backbone으로 하고, diversity가 높은 Open-X dataset에서 fine-tuning했다. 또한 LoRA와 quantization을 활용한 효율적인 fine-tuning 기법을 사용했다.
-
-기존의 SOTA였던 RT-2-X, pretrained model인 Octo를 outperform했다.
+OpenVLA는 기존의 SOTA였던 RT-2-X, pretrained model인 Octo를 outperform했다.
 
 ### Related Work
 
 #### VLM and VLA
 
-기존의 VLM의 주요 아키텍처는 pretrained vision encoder와 pretrained language model을 연결하는 것이다. 
-특히 vision&language feature를 어떻게 함께 잘 사용할 것인가에 대한 연구가 이루어져 왔는데, 최근의 오픈소스 VLM들은 단순히 vision feature를 tokenize하여, language model의 space로 projection하는 방식을 사용한다.
+**Vision-Language Model(VLM)**의 주요 architecture는 pretrained vision encoder와 pretrained language model을 사용해 모델을 구성하는 형태이다. 이때 vision feature를 tokenize하여 language model의 space로 projection하는 식으로 두 모델을 연결해 사용한다.
 
-
-robototics에 VLM을 적용하려는 시도가 계속 이루어지고 있었는데, 일부는 end-to-end visuomotor manipulation policy에 VLM을 통합하는 시도를 했다. 이는 applicability가 낮다.
-
-대신 많은 최근 연구는 pretrained VLM을 robot action을 예측하도록 fine-tuning하는 방법을 사용한다. 이를 VLA model이라고 한다. 이 경우 VLM의 추론 능력과 학습 방식을 활용할 수 있다.
+robototics에서는 로봇의 조작을 위해 이런 VLM을 적용하려는 시도가 계속 이루어지고 있었는데, 최근 많은 연구는 pretrained VLM을 robot action을 예측하도록 fine-tuning하는 방법을 사용한다. 본 논문에서는 이렇게 fine-tuning한 VLM을 **Vison-Language-Action Model(VLA)**이라고 한다. 즉, VLA는 VLM의 추론 능력과 학습 방식을 활용해 로봇 조작을 수행한다.
 
 #### Baselines
 
-최근 robotics의 트렌드는 multi-task에 대한 처리가 가능한 generalist를 만드는 것이다.
+최근 robotics의 트렌드는 multi-task에 대한 처리가 가능한 generalist를 만드는 것이다. OpenVLA 논문에서 언급하는 baseline 모델은 Octo와 RT-2-X가 있다.
 
-- **Octo**
+- **Octo**는 93M 크기의 VLA이다.
+
+자세한 내용은 [Octo Paper](https://arxiv.org/abs/2405.12213)를 참고하자.
 
 Octo는 OpenVLA와 유사하지만, pretrained vision/language model 외에도 새로 학습하는 component를 사용했다. OpenVLA는 더 단순하게 더 좋은 성능을 달성했다.
 

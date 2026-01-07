@@ -16,58 +16,64 @@ math: true
 
 하지만 앞선 연구에서 제안하는 최신 모델들은 **1) 오픈소스가 아니고, 2) 새로운 환경/하드웨어에 deploy하는데에 있어 best practice가 아니라는 한계**가 있다. 이런 배경에서 저자는 generalization 능력을 갖춘 VLA가 기존의 오픈소스 language model들과 같이, 오픈소스여야 하고 효율적인 fine-tuning을 지원해야 한다고 주장한다.
 
-이에 따라 이 논문에서 제안하는 VLA인 **OpenVLA**는 다음과 같은 특징을 가지고, 기존의 SOTA였던 RT-2-X, pretrained model인 Octo를 outperform했다.
+이에 따라 이 논문에서 제안하는 VLA인 [**OpenVLA**](https://openvla.github.io/)(arxiv 2024, 1435회 인용)는 다음과 같은 특징을 가지고, 기존의 SOTA였던 RT-2-X, pretrained model인 Octo를 outperform했다.
 
 1. **pretrained vision-language foundation model을 backbone으로 하고, Open X-Embodiment dataset에서 fine-tuning해 generalization 능력을 갖췄다.**
 2. **오픈소스로 배포된 VLA 모델이다.**
 3. **LoRA와 quantization을 활용한 효율적인 fine-tuning 및 inference를 지원한다.**
 
-### Related Work
-
-#### VLM and VLA
+### VLM and VLA
 
 **Vision-Language Model(VLM)**의 주요 architecture는 pretrained vision encoder와 pretrained language model을 사용해 모델을 구성하는 형태이다. 이때 vision feature를 tokenize하여 language model의 space로 projection하는 식으로 두 모델을 연결해 사용한다.
 
-robototics에서는 로봇의 조작을 위해 이런 VLM을 적용하려는 시도가 계속 이루어지고 있었는데, 최근 많은 연구는 pretrained VLM을 robot action을 예측하도록 fine-tuning하는 방법을 사용한다. 본 논문에서는 이렇게 fine-tuning한 VLM을 **Vison-Language-Action Model(VLA)**이라고 한다. 즉, VLA는 VLM의 추론 능력과 학습 방식을 활용해 로봇 조작을 수행한다.
+robototics에서는 로봇의 조작을 위해 이런 VLM을 적용하려는 시도가 계속 이루어지고 있었는데, 최근 많은 연구는 pretrained VLM을 robot action을 예측하도록 fine-tuning하는 방법을 사용한다. 본 논문에서는 이런 구조를 가지는 VLM을 **Vison-Language-Action Model(VLA)**이라고 한다. 즉, VLA는 VLM의 추론 능력과 학습 방식을 활용해 로봇 조작을 수행한다.
 
-#### Baselines
+### Baselines
 
 최근 robotics의 트렌드는 multi-task에 대한 처리가 가능한 generalist를 만드는 것이다. OpenVLA 논문에서 언급하는 baseline 모델은 Octo와 RT-2-X가 있다.
 
-- **Octo**는 93M 크기의 VLA이다.
+- [**Octo**](https://arxiv.org/abs/2405.12213)(arxiv 2024, 831회 인용)는 93M 크기의 오픈소스 VLA이다. 그 아키텍처는 다음 그림과 같다. pretrained language tokenizer로 T5-base를 사용했고, image tokenizer로 CNN을, backbone 모델로는 ViT와 동일한 크기의 transformer를, action decoder로는 diffusion process를 수행하는 action head를 사용했다. 학습 시에는 language tokenizer는 freeze하고 나머지 부분은 pretrain했고, dataset으로는 OXE dataset 중 일부를 선별해 활용했다. 이때 readout token은 action head의 입력으로 사용되는 learnable token으로, BERT의 CLS token과 같은 역할을 가진다. 또한 새로운 로봇에 대한 fine-tuning 시에는 추가적인 observation과 readout/action head를 추가할 수 있다.
 
-자세한 내용은 [Octo Paper](https://arxiv.org/abs/2405.12213)를 참고하자.
+    Octo는 다른 기기로의 적용과 fine-tuning을 고려하고 있지만, 추가적인 component를 pretrain하여 사용한다. 반면 OpenVLA는 pretrained VLM을 사용하여 더 단순하게 더 좋은 성능을 달성했다.
 
-Octo는 OpenVLA와 유사하지만, pretrained vision/language model 외에도 새로 학습하는 component를 사용했다. OpenVLA는 더 단순하게 더 좋은 성능을 달성했다.
+![](/assets/img/posts/2026-1-6-OpenVLA/octo arch.png){: width="800"}
 
-- **RT-2-X**
+- [**RT-2-X**](https://robotics-transformer2.github.io/)(PMLR 2023, 2390회 인용)는 55B 크기(더 작은 버전도 존재)의 오픈소스가 아닌(closed) VLA로, OpenVLA 이전의 SOTA이다. 그 아키텍처는 다음 그림과 같다. RT-2-X는 VLM인 PaLI-X와 PaLM-E을 backbone으로 사용했고, OpenVLA와 유사하게 기존 token들 중 256개를 action token으로 활용했다. 학습 시에는 RT-1-X에서 사용했던 robot data와 internet-scale dataset인 WebLI dataset을 함께 사용했다.
 
-하지만 기존 VLA 관련 연구는 하나의 로봇이나 simulation에서의 학습과 평가에만 집중하고, 새로운 로봇에 대한 효율적인 fine-tuning을 지원하지 않는다. 특히 SOTA인 RT-2-X도 그렇다.
+    RT-2-X는 하나의 로봇이나 simulation에서의 학습과 평가에만 집중하고, 새로운 로봇에 대한 효율적인 fine-tuning을 지원하지 않는다. 또한 오픈소스가 아니다. 반면 OpenVLA는 성능이 더 좋고, 효율적인 fine-tuning을 지원하면서, 오픈소스이다.
 
-
-기존 VLA 연구와 비교해서 OpenVLA는 1) outperform하고 2) 새로운 기기에 적용할 떄의 fine-tuning 기법을 제시하며 3) VLA에 PEFT와 quantization을 최초로 적용 가능함을 입증했고 4) 오픈소스라는 점에서 이점이 있다.
+![](/assets/img/posts/2026-1-6-OpenVLA/rt2 arch.png){: width="800"}
 
 ## OpenVLA
 
 ### Architecture
 
-최근 VLM의 아키텍처는 visual encoder, projector, LLM으로 구성되고, 다음 토큰을 예측하도록 학습된다.
-
-OpenVLA는 [44]의 Prismatic-7B VLM을 사용한다. 이때 [44]에서 주장하는 바와 같이 visual encoder는 SigLIP와 DinoV2를 함께 사용하는 것이 spatial reasoning에 더 유리하다고 한다.
-
-Prismatic VLM은 해당 component로 구성한 뒤 fine-tuning한 것이라고 한다.
-
-OpenVLA에서도 그렇게 했고, 특히 [44]의 VLM을 backbone으로 활용하여, DINOv2와 SigLIP을 사용했다고 한다.
-
-
-OpenVLA에서는 action prediction을 vision-language task로 인식하고, Prismatic VLM을 fine-tuning한다. 이에 따라 OpenVLA의 discrete output language token과 continuous robot action을 mapping해 활용한다.
+**OpenVLA**는 다음 그림과 같이 pretrained VLM인 Prismatic-7B VLM을 backbone으로 사용하는 architecture를 가진다. 또한 RT-2-X처럼 기존 token들 중 256개를 action token으로 해, 다음 토큰을 autoregressive하게 예측하도록 Prismatic-7B VLM을 fine-tuning한다. 즉, discrete output language token과 continuous robot action을 mapping한 것으로 볼 수 있다.
 
 이때 robot action을 256개의 bin(구간)으로 나눠 활용한다. bin width는 백분위수를 사용해 제1백분위수와 제99백분위수 사이를 uniform하게 나누는 값으로 지정한다. (RT-2와 달리 outlier를 제외한 것.)
 
 N차원의 robot action은 N개의 0~255사이 값으로 구성되는 action token을 사용하게 된다. Llama tokenizer는 100개의 speical token만을 가지므로, least used token들을 overwrite해 사용한다.
 
 
+![](/assets/img/posts/2026-1-6-OpenVLA/OpenVLA arch.png){: width="700"}
+
+[**Prismatic VLMs paper**](https://openreview.net/forum?id=6FXtu8clyp)(ICML 2024, 236회 인용)에서는 VLM이 가지는 여러 가지 design decision들이 존재하지만 최적의 design이 under-explore된 것에 착안하여, VLM을 평가하는 unified framework를 정의하고 여러 model checkpoint를 제공한다. 또한 VLM design에 대한 평가 결과를 바탕으로 다음 그림과 같이 **Prismatic-7B VLM**을 제안한다. Prismatic-7B VLM는 OpenVLA architecture 그림에 나와있는 것처럼, vision encoder로 SigLIP와 DinoV2를, language model로 Llama2를 사용하며, MLP projector로 vision feature를 language embedding space로 projection하는 architecture를 가진다.
+
+참고로 visual encoder는 SigLIP와 DinoV2를 함께 사용하는 것이 spatial reasoning에 더 유리하다고 한다.
+
+각각 넣은 뒤 두 embedding을 concat한다.
+
+MLP projector는 그냥 vision embedding 크기를 language embedding 크기로 바꾸는..
+
+![](/assets/img/posts/2026-1-6-OpenVLA/prism result.png){: width="400"}
+
+
+
+
+
 ### Training
+
+해당 component로 구성한 뒤 fine-tuning한 것이라고 한다.
 
 OpenVLA는 next-token prediction을 수행하도록 학습된다.
 

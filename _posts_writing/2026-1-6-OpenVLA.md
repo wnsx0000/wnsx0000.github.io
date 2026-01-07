@@ -16,9 +16,11 @@ math: true
 
 하지만 앞선 연구에서 제안하는 최신 모델들은 **1) 오픈소스가 아니고, 2) 새로운 환경/하드웨어에 deploy하는데에 있어 best practice가 아니라는 한계**가 있다. 이런 배경에서 저자는 generalization 능력을 갖춘 VLA가 기존의 오픈소스 language model들과 같이, 오픈소스여야 하고 효율적인 fine-tuning을 지원해야 한다고 주장한다.
 
-**이에 따라 제안되는 OpenVLA는 pretrained vision-language foundation model을 backbone으로 하고, Open X-Embodiment dataset에서 fine-tuning되어 generalization 능력을 갖추었으면서, 오픈소스로 배포된 VLA 모델이다. 또한 LoRA와 quantization을 활용한 효율적인 fine-tuning 및 inference를 지원한다.**
+이에 따라 이 논문에서 제안하는 VLA인 **OpenVLA**는 다음과 같은 특징을 가지고, 기존의 SOTA였던 RT-2-X, pretrained model인 Octo를 outperform했다.
 
-OpenVLA는 기존의 SOTA였던 RT-2-X, pretrained model인 Octo를 outperform했다.
+1. **pretrained vision-language foundation model을 backbone으로 하고, Open X-Embodiment dataset에서 fine-tuning해 generalization 능력을 갖췄다.**
+2. **오픈소스로 배포된 VLA 모델이다.**
+3. **LoRA와 quantization을 활용한 효율적인 fine-tuning 및 inference를 지원한다.**
 
 ### Related Work
 

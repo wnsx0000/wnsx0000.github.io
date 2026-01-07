@@ -6,7 +6,7 @@ tags: [ai, VLA]
 math: true
 ---
 
-지난 주에는 겨울방학 동안 연구실에서 공부하고 실험해 볼 분야를 찾아봤었다. 현재 내 관심사는 edge에서의, 또는 edge-server간 협응을 통한 AI model serving이다 보니, edge에서의 효율적이고 빠른 연산이 중요한 Efficient VLA 관련 논문을 읽어보려 했다. 이에 따라 본 포스트에서는 교수님께서 제안서와 함께 공유해주신 논문들 중 하나인 [A Survey on Efficient Vision-Language-Action Models](https://arxiv.org/abs/2510.24795)의 내용을 간략히 정리한다. 해당 survey 논문은 2025년 10월 27일에 arxiv에 올라온 논문으로, 나름 최신 논문이면서 efficient VLA와 관련된 논문들을 model/training/dataset의 관점에서 여러 세부 분야로 잘 분류하여 정리해 놨다.
+지난 주에는 겨울방학 동안 연구실에서 공부하고 실험해 볼 분야를 찾아봤었다. 현재 내 관심사는 edge에서의, 또는 edge-server간 협응을 통한 efficient AI model serving이다 보니, edge에서의 효율적이고 빠른 연산이 중요한 Efficient VLA 관련 논문을 읽어보려 했다. 이에 따라 본 포스트에서는 교수님께서 제안서와 함께 공유해주신 논문들 중 하나인 [A Survey on Efficient Vision-Language-Action Models](https://arxiv.org/abs/2510.24795)의 내용을 간략히 정리한다. 해당 survey 논문은 2025년 10월 27일에 arxiv에 올라온 논문으로, 나름 최신 논문이면서 efficient VLA와 관련된 논문들을 model/training/dataset의 관점에서 여러 세부 분야로 잘 분류하여 정리해 놨다.
 
 ## VLA
 
@@ -32,13 +32,15 @@ VLA에서 활용하는 데이터셋은 real-world dataset과 simulation data으�
 
 real-world dataset 각각에 대한 구체적인 설명은 다음과 같다.
 
-- **Open X-Embodiment(OXE)**는 구글 딥마인드와 전 세계 여러 기관이 협력하여 구축한 대규모 로봇 데이터셋으로, 60개 이상의 기존 데이터셋을 결합해 RLDS(Reinforcement Learning Datasets)라는 포맷으로 구성했다. 총 100만개 이상의 궤적 데이터를 포함한다. OXE는 다양한 task, 로봇(WidowX, Franka 등 22종), 환경을 아우르고 있어 generalization 및 transfer learning capacity를 학습시키는 데에 사용될 수 있다. 특히 RT-1-X, RT-2-X, Octo, OpenVLA가 OXE로 훈련되었다.
+- [**Open X-Embodiment(OXE)**](https://robotics-transformer-x.github.io/)는 구글 딥마인드와 전 세계 여러 기관이 협력하여 구축한 대규모 로봇 데이터셋으로, BridgeData 등 60개 이상의 기존 데이터셋을 결합해 RLDS(Reinforcement Learning Datasets)라는 포맷으로 구성했고, 총 1,400,000개 가량의 episode(trajectory)들을 포함한다. [OXE 데이터셋 overview](https://docs.google.com/spreadsheets/d/1rPBD77tk60AEIGZrGSODwyyzs5FgCU9Uz3h-3_t2A9g/edit?gid=0#gid=0)에서 어떤 데이터들로 구성되어 있는지 쉽게 확인할 수 있다. OXE는 다양한 task, 로봇(WidowX, Franka 등 22종), 환경을 아우르고 있어 generalization 및 transfer learning capacity를 학습시키는 데에 사용될 수 있다. 특히 RT-1-X, RT-2-X, Octo, OpenVLA가 OXE로 훈련되었다.
 
-- **BridgeData**는 UC Berkeley 연구팀이 주도하여 공개한 데이터셋으로, WidowX 250(6축 로봇 팔)을 사용하여 범용적인 가사 노동(Kitchen tasks)에 대한 정보를 담고 있다. 총 7,200개 정도의 궤적 데이터를 포함한다. 또한 특정 작업에만 특화된 데이터가 아니라, 여러 작업 간의 연결(bridge)을 포함하는 데이터를 가지고 있어 generalization 성능을 높일 수 있도록 했다.
+    이는 OXE v1에 대한 설명이고, OXE v1.1에서는 DROID 등 12개의 데이터셋이 추가되어 총 2,400,000M개 가량의 episode(trajectory)들을 포함한다.
 
-- **BrideData V2**는 BridgeData를 확장한 것으로, 그 규모와 다양성도 증가했고, 모든 데이터에 language label이 포함되어 있어 VLA 학습에 잘 활용될 수 있다. 총 60,000개 정도의 궤적 데이터를 포함한다.
+- **BridgeData**는 UC Berkeley 연구팀이 주도하여 공개한 데이터셋으로, WidowX 250(6축 로봇 팔)을 사용하여 범용적인 가사 노동(Kitchen tasks)에 대한 정보를 담고 있다. 총 7,200개 정도의 episode(trajectory)를 포함한다. 또한 특정 작업에만 특화된 데이터가 아니라, 여러 작업 간의 연결(bridge)을 포함하는 데이터를 가지고 있어 generalization 성능을 높일 수 있도록 했다.
+
+- [**BrideData V2**](https://rail-berkeley.github.io/bridgedata/)는 BridgeData를 확장한 것으로, 그 규모와 다양성도 증가했고, 모든 데이터에 language label이 포함되어 있어 VLA 학습에 잘 활용될 수 있다. 총 60,000개 가량의 궤적 데이터를 포함한다.
   
-- **DROID**는 Franka Panda(7축 로봇 팔)과 스테레오 카메라를 사용하여 여러 scene과 task를 포함하는 대규모 로봇 데이터셋이다. 총 76,000개 정도의 궤적 데이터를 포함한다. scene의 다양성이 높고, 스테레오 카메라를 사용하여 depth와 3D 시각 정보를 포함하므로 정밀한 조작을 학습하는 데에 유리하다.
+- [**DROID**](https://droid-dataset.github.io/)는 Franka Panda(7축 로봇 팔)과 스테레오 카메라를 사용하여 여러 scene과 task를 포함하는 대규모 로봇 데이터셋이다. 총 76,000개 정도의 episode(trajectory)를 포함한다. scene의 다양성이 높고, 스테레오 카메라를 사용하여 depth와 3D 시각 정보를 포함하므로 정밀한 조작을 학습하는 데에 유리하다.
 
 ## Efficient VLA Related Works
 

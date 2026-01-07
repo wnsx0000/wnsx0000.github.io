@@ -6,7 +6,7 @@ tags: [ai, VLA]
 math: true
 ---
 
-지난 주에는 겨울방학 동안 연구실에서 공부하고 실험해 볼 분야를 찾아봤었다. 현재 내 관심사는 edge에서의, 또는 edge-server간 협응을 통한 efficient AI model serving이다 보니, edge에서의 효율적이고 빠른 연산이 중요한 Efficient VLA 관련 논문을 읽어보려 했다. 이에 따라 본 포스트에서는 교수님께서 제안서와 함께 공유해주신 논문들 중 하나인 [A Survey on Efficient Vision-Language-Action Models](https://arxiv.org/abs/2510.24795)의 내용을 간략히 정리한다. 해당 survey 논문은 2025년 10월 27일에 arxiv에 올라온 논문으로, 나름 최신 논문이면서 efficient VLA와 관련된 논문들을 model/training/dataset의 관점에서 여러 세부 분야로 잘 분류하여 정리해 놨다.
+지난 주에는 [연구실](https://aica.ssu.ac.kr/home)에서 겨울방학 동안 공부하고 실험해 볼 분야를 찾아봤었다. 현재 내 관심사는 edge에서의, 또는 edge-server간 협응을 통한 efficient AI model serving이다 보니, edge에서의 효율적이고 빠른 연산이 중요한 Efficient VLA 관련 논문을 읽어보려 했다. 이에 따라 본 포스트에서는 교수님께서 제안서와 함께 공유해주신 논문들 중 하나인 [A Survey on Efficient Vision-Language-Action Models](https://arxiv.org/abs/2510.24795)의 내용을 간략히 정리한다. 해당 survey 논문은 2025년 10월 27일에 arxiv에 올라온 논문으로, 나름 최신 논문이면서 efficient VLA와 관련된 논문들을 model/training/dataset의 관점에서 여러 세부 분야로 잘 분류하여 정리해 놨다.
 
 ## VLA
 
@@ -32,7 +32,7 @@ VLA에서 활용하는 데이터셋은 real-world dataset과 simulation data으�
 
 real-world dataset 각각에 대한 구체적인 설명은 다음과 같다.
 
-- [**Open X-Embodiment(OXE)**](https://robotics-transformer-x.github.io/)는 구글 딥마인드와 전 세계 여러 기관이 협력하여 구축한 대규모 로봇 데이터셋으로, BridgeData 등 60개 이상의 기존 데이터셋을 결합해 RLDS(Reinforcement Learning Datasets)라는 포맷으로 구성했고, 총 1,400,000개 가량의 episode(trajectory)들을 포함한다. [OXE 데이터셋 overview](https://docs.google.com/spreadsheets/d/1rPBD77tk60AEIGZrGSODwyyzs5FgCU9Uz3h-3_t2A9g/edit?gid=0#gid=0)에서 어떤 데이터들로 구성되어 있는지 쉽게 확인할 수 있다. OXE는 다양한 task, 로봇(WidowX, Franka 등 22종), 환경을 아우르고 있어 generalization 및 transfer learning capacity를 학습시키는 데에 사용될 수 있다. 특히 RT-1-X, RT-2-X, Octo, OpenVLA가 OXE로 훈련되었다.
+- [**Open X-Embodiment(OXE)**](https://robotics-transformer-x.github.io/)는 구글 딥마인드와 전 세계 여러 기관이 협력하여 구축한 대규모 로봇 데이터셋으로, BridgeData 등 60개 이상의 기존 데이터셋을 결합해 RLDS(Reinforcement Learning Datasets)라는 포맷으로 구성했고, 총 1,400,000개 가량의 episode(trajectory)들을 포함한다. [OXE 데이터셋 overview](https://docs.google.com/spreadsheets/d/1rPBD77tk60AEIGZrGSODwyyzs5FgCU9Uz3h-3_t2A9g/edit?gid=0#gid=0)에서 어떤 데이터들로 구성되어 있는지 쉽게 확인할 수 있다. OXE는 다양한 task, 로봇(WidowX, Franka 등 22종), 환경을 아우르고 있어 generalization 및 transfer learning capacity를 학습시키는 데에 사용될 수 있다. 특히 Octo, OpenVLA 등이 OXE로 훈련되었다.
 
     이는 OXE v1에 대한 설명이고, OXE v1.1에서는 DROID 등 12개의 데이터셋이 추가되어 총 2,400,000M개 가량의 episode(trajectory)들을 포함한다.
 

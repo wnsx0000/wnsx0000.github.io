@@ -153,8 +153,6 @@ OpenVLA는 앞서 설명한 것처럼 다음과 같은 사항을 달성한다.
 
 하지만 모델 크기가 7B이고, 속도도 충분히 빠르지 않고, 사용한 GPU를 고려하면 아직 edge에서 돌릴 순 없을 거 같다. [OpenVLA github.io](https://openvla.github.io/)에서 확인할 수 있는 시연 영상에 배속이 얼마나 들어갔는지를 생각해 보면, 여전히 inference frequency(speed)가 너무 낮다. 또한 OpenVLA는 Octo보다 훨씬 크고 action quantization error가 존재하므로 정밀한 움직임으로 제어하긴 어렵다. 이에 따라 OFT, FAST 등의 후속 연구가 나왔다고 하니 읽어볼만 할 듯하다.
 
-speculative decoding처럼.. backbone LLM이 여러 token을 한 번에 예측해서 넘겨주면.. edge의 diffusion head 등이 하나씩 추론해서 사용하는..
-
 ### 향후 방향
 
 해당 논문은 읽어보며 VLA 관련 연구가 어떤 식으로 이뤄지고 있는지를 알 수 있었다. 하지만 해당 모델은 edge에서 바로 돌리기엔 너무 크고, 속도도 충분히 빠르지 않다. 이렇게 LLM을 backbone으로 사용해 generalization 능력을 확보했다면 모델 자체가 많이 작아지긴 어려울 거 같으니, 이에 따라 edge-server의 협응으로 VLA를 serving하는 system이 정확도 및 속도 측면에서 효과적일 것으로 보인다. 현재 내 관심사는 edge에서의, 또는 edge-server간 협응을 통한 efficient AI model serving이고, 이런 쪽으로 더 알아보면 좋을 것 같다.

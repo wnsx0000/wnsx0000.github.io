@@ -6,15 +6,17 @@ tags: [ai, VLA]
 math: true
 ---
 
-지난 번 읽어본 [Efficient VLA survey 논문](https://arxiv.org/abs/2510.24795)에 이어, 이번에는 해당 survey에서 소개하는 여러 논문 중 거의 가장 인용수가 높으면서 그 이름대로 코드와 모델이 오픈소스인 [**OpenVLA**](https://arxiv.org/abs/2406.09246)라는 논문을 읽어봤다. 이 논문은 2024년 9월 초에 arxiv에 올라온 논문으로, 26.1.6. 기준 인용수가 1433회이다.
+지난 번 읽어본 [Efficient VLA survey 논문](https://arxiv.org/abs/2510.24795)에 이어, 이번에는 해당 survey에서 소개하는 여러 논문 중 거의 가장 인용수가 높으면서 그 이름대로 코드와 모델이 오픈소스인 [**OpenVLA**](https://arxiv.org/abs/2406.09246)(arxiv 2024, 1435회 인용)라는 논문을 읽어봤다. 
+
+관련 내용을 잘 설명하고 있는 블로그 글인 [옥토와 오픈VLA 심층 분석](https://blog.naver.com/simula/224108760730?trackingCode=rss)(25.12.14.)도 읽어보면 좋다.
 
 ## Introduction
 
 ### Abstract & Motivation
 
-기존 robotics 관련 모델들의 주요 한계는 LLM 등에 비교했을 때 dataset 자체가 너무 작아서 generalization, robustness가 부족하다는 것이다. 하지만 internet-scale dataset으로 pretrain된 vision-language foundation model들은 높은 generalization 능력을 가지고 있다. 이에 따라 **pretrained vision-language foundation model들을 core block으로 사용하는 시도**가 이루어지고 있다.
+로봇 공학 분야에서는 오랜 시간 동안 특정 상황과 기기에 최적화된 specialist 모델을 개발해 사용해왔지만, 이런 방식은 공장 등 정형화된 환경을 벗어나 일상생활 등 비정형화된 환경에 적용되었을 때의 한계가 명확하다. 이런 기존 robotics 관련 모델들의 주요 한계는 dataset 자체가 너무 작고 제한되어 있어서 generalization 능력과, robustness가 부족하다는 것이다. 반면 internet-scale dataset으로 pretrain된 vision-language foundation model들은 높은 generalization 능력을 가지고 있고, 이에 따라 **pretrained vision-language foundation model들을 core block으로 사용하여 generalist 모델을 개발하려는 시도**가 이루어지고 있다.
 
-하지만 앞선 연구에서 제안하는 최신 모델들은 **1) 오픈소스가 아니고, 2) 새로운 환경/하드웨어에 deploy하는데에 있어 best practice가 아니라는 한계**가 있다. 이런 배경에서 저자는 generalization 능력을 갖춘 VLA가 기존의 오픈소스 language model들과 같이, 오픈소스여야 하고 효율적인 fine-tuning을 지원해야 한다고 주장한다.
+하지만 앞선 연구에서 제안하는 최신 generalist 모델들은 **1) 오픈소스가 아니고, 2) 모델을 새로운 환경/하드웨어에 deploy하는데에 있어 best practice가 아니라는 한계**가 있다. 이런 배경에서 저자는 generalization 능력을 갖춘 VLA가 기존의 오픈소스 language model들과 같이, 오픈소스여야 하고 효율적인 fine-tuning을 지원해야 한다고 주장한다.
 
 이에 따라 이 논문에서 제안하는 VLA인 [**OpenVLA**](https://openvla.github.io/)(arxiv 2024, 1435회 인용)는 다음과 같은 특징을 가지고, 기존의 SOTA였던 RT-2-X, pretrained model인 Octo를 outperform했다.
 
@@ -120,24 +122,46 @@ OpenVLA에 대한 full fine-tuning은 8개의 A100 GPUs를 사용했을 때 task
 
 ![](/assets/img/posts/2026-1-6-OpenVLA/exp4.png){: width="400"}
 
-**vision encoder를 학습시키지 않는 방식은 성능이 크게 떨어졌고, LoRA의 성능이 가장 좋았다. 이때 rank는 상관이 거의 없었다.**
+**vision encoder를 학습시키지 않는 방식은 성능이 크게 떨어졌고, LoRA의 성능이 가장 좋았다.** 이때 rank는 상관이 거의 없었다. 또한 LoRA를 사용하는 경우 하나의 A100 GPU로 10~15시간이면 학습이 완료됐다고 한다.
 
 ### Quantization
 
 Octo(93M)와 비교하면 OpenVLA(7B)가 inferece에 VRAM이 많이 필요하다 보니, quantization을 적용하는 실험도 수행했다.
 
-modern LLM quantization 기법인 [QLoRA](https://proceedings.neurips.cc/paper_files/paper/2023/hash/1feb87871436031bdc0f2beaa62a049b-Abstract-Conference.html)(NeurIPS 2023, 4802회 인용)와 [LLM.int8()](https://proceedings.neurips.cc/paper_files/paper/2022/hash/c3ba4962c05c49636d4c6206a97e9c8a-Abstract-Conference.html)(NeurIPS 2022, 1734회 인용)을 사용해 INT4, INT8로 precision을 낮춰서 비교했고, GPU별 speed와 precision별 BridgeData V2 dataset 중 8가지 task에서의 성공 횟수를 확인했다.
+modern LLM quantization 기법인 [QLoRA](https://proceedings.neurips.cc/paper_files/paper/2023/hash/1feb87871436031bdc0f2beaa62a049b-Abstract-Conference.html)(NeurIPS 2023, 4802회 인용)와 [LLM.int8()](https://proceedings.neurips.cc/paper_files/paper/2022/hash/c3ba4962c05c49636d4c6206a97e9c8a-Abstract-Conference.html)(NeurIPS 2022, 1734회 인용)을 사용해 INT4, INT8로 precision을 낮춰서 비교했고, GPU별 speed, BridgeData V2 dataset 중 8가지 task에서 precision별 성공 횟수를 확인했다.
 
 ![](/assets/img/posts/2026-1-6-OpenVLA/exp5.png){: width="700"}
 
-INT4가 좋았다. 또한 quantization 연산 overhead에 의해 INT8의 speed가 더 느렸고, speed가 느려지다 보니 system dynamics와 맞지 않아 성능도 떨어졌다.
+INT8의 경우 quantization에 의한 추가 연산에 따른 overhead가 커서 speed(frequency)가 떨어졌는데, BridgeData V2 dataset이 수집된 frequency(5Hz)에 비해 frequency가 떨어지다 보니(1.2Hz) system dynamics와 맞지 않아 성능도 크게 떨어졌다고 한다. 
+반면 **INT4**는 GPU memory transfer 시간 감소에 따른 gain이 quantization overhead보다 커서 speed(frequency)가 크게 떨어지지 않았고(3Hz), 성능도 보존됐다.
+
+대신 blocking control을 적용해, 예측한 action이 모두 실행된 이후 그 다음 action을 예측하도록 해서 frequency를 배제하고 action의 정확도만 확인해 보면 다음 표와 같이 INT8의 성능이 높게 나오는 것을 확인할 수 있었다고 한다.
+
+dataset이 수집된 frequency와 inference에서의 control frequency에 차이가 나면 success rate가 떨어지는데, 이는 모델이 해당 dataset에서 기대하는 시간 간격 내에서의 물리적 변화를 예측하게 되기 때문이라고 한다. 구체적으로 OpenVLA가 예측하는 값이 robot contorller에서 non-blocking으로 어떻게 처리되는지는 더 알아봐야 한다.
+
+![](/assets/img/posts/2026-1-6-OpenVLA/quant exp.png){: width="700"}
 
 ## 결론
 
 ### Pros and Cons
 
+OpenVLA는 앞서 설명한 것처럼 다음과 같은 사항을 달성한다.
+
+1. pretrained vision-language foundation model을 backbone으로 하고, Open X-Embodiment dataset에서 fine-tuning해 generalization 능력을 갖췄다.
+2. 오픈소스로 배포된 VLA 모델이다.
+3. LoRA와 quantization을 활용한 효율적인 fine-tuning 및 inference를 지원한다.
+
+하지만 모델 크기가 7B이고, 속도도 충분히 빠르지 않고, 사용한 GPU를 고려하면 아직 edge에서 돌릴 순 없을 거 같다. [OpenVLA github.io](https://openvla.github.io/)에서 확인할 수 있는 시연 영상에 배속이 얼마나 들어갔는지를 생각해 보면, 여전히 inference frequency(speed)가 너무 낮다. 또한 OpenVLA는 Octo보다 훨씬 크고 action quantization error가 존재하므로 정밀한 움직임으로 제어하긴 어렵다. 이에 따라 OFT, FAST 등의 후속 연구가 나왔다고 하니 읽어볼만 할 듯하다.
+
+speculative decoding처럼.. backbone LLM이 여러 token을 한 번에 예측해서 넘겨주면.. edge의 diffusion head 등이 하나씩 추론해서 사용하는..
+
 ### 향후 방향
 
-느낌을 볼 수 있었고.. VLA와 관련하여 edge-server 협응..?
+해당 논문은 읽어보며 VLA 관련 연구가 어떤 식으로 이뤄지고 있는지를 알 수 있었다. 하지만 해당 모델은 edge에서 바로 돌리기엔 너무 크고, 속도도 충분히 빠르지 않다. 이렇게 LLM을 backbone으로 사용해 generalization 능력을 확보했다면 모델 자체가 많이 작아지긴 어려울 거 같으니, 이에 따라 edge-server의 협응으로 VLA를 serving하는 system이 정확도 및 속도 측면에서 효과적일 것으로 보인다. 현재 내 관심사는 edge에서의, 또는 edge-server간 협응을 통한 efficient AI model serving이고, 이런 쪽으로 더 알아보면 좋을 것 같다.
+
+그래서 다음으로는 다음과 같은 2가지 조사를 추가적으로 수행할 계획이다.
+
+1. OpenVLA를 넘어선 가장 최근의 SOTA 모델에서는 어떤 아키텍처를 사용하고 있으며, 어느 정도의 성능을 보이는지 확인한다.
+2. edge-server간 협응을 통한 VLA serving에는 어떤 선행 연구가 있었는지 확인한다.
 
 

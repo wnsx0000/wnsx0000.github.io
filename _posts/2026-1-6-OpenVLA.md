@@ -6,7 +6,7 @@ tags: [ai, VLA]
 math: true
 ---
 
-지난 번 읽어본 [Efficient VLA survey 논문](https://arxiv.org/abs/2510.24795)에 이어, 이번에는 해당 survey에서 소개하는 여러 논문 중 거의 가장 인용수가 높으면서 그 이름대로 코드와 모델이 오픈소스인 [**OpenVLA**](https://arxiv.org/abs/2406.09246)(arxiv 2024, 1435회 인용)라는 논문을 읽어봤다. 
+지난 번 읽어본 [Efficient VLA survey 논문](https://arxiv.org/abs/2510.24795)에 이어, 이번에는 해당 survey에서 소개하는 여러 논문 중 거의 가장 인용수가 높으면서 그 이름대로 코드와 모델이 오픈소스인 [**OpenVLA**](https://openvla.github.io/)(PMLR 2025, 1435회 인용)라는 논문을 읽어봤다. 
 
 관련 내용을 잘 설명하고 있는 블로그 글인 [옥토와 오픈VLA 심층 분석](https://blog.naver.com/simula/224108760730?trackingCode=rss)(25.12.14.)도 읽어보면 좋다.
 
@@ -14,11 +14,11 @@ math: true
 
 ### Abstract & Motivation
 
-로봇 공학 분야에서는 오랜 시간 동안 특정 상황과 기기에 최적화된 specialist 모델을 개발해 사용해왔지만, 이런 방식은 공장 등 정형화된 환경을 벗어나 일상생활 등 비정형화된 환경에 적용되었을 때의 한계가 명확하다. 이런 기존 robotics 관련 모델들의 주요 한계는 dataset 자체가 너무 작고 제한되어 있어서 generalization 능력과, robustness가 부족하다는 것이다. 반면 internet-scale dataset으로 pretrain된 vision-language foundation model들은 높은 generalization 능력을 가지고 있고, 이에 따라 **pretrained vision-language foundation model들을 core block으로 사용하여 generalist 모델을 개발하려는 시도**가 이루어지고 있다.
+로봇 공학 분야에서는 오랜 시간 동안 특정 상황과 기기에 최적화된 specialist 모델을 개발해 사용해왔지만, 이런 방식은 공장 등 정형화된 환경을 벗어나 일상생활 등 비정형화된 환경에 적용되었을 때의 한계가 명확하다. 기존 robotics 관련 모델들의 주요 한계는 dataset 자체가 너무 작고 제한되어 있어서 generalization 능력과, robustness가 부족하다는 것이다. 반면 internet-scale dataset으로 pretrain된 vision-language foundation model들은 높은 generalization 능력을 가지고 있고, 이에 따라 **pretrained vision-language foundation model들을 core block으로 사용하여 generalist 모델을 개발하려는 시도**가 이루어지고 있다.
 
 하지만 앞선 연구에서 제안하는 최신 generalist 모델들은 **1) 오픈소스가 아니고, 2) 모델을 새로운 환경/하드웨어에 deploy하는데에 있어 best practice가 아니라는 한계**가 있다. 이런 배경에서 저자는 generalization 능력을 갖춘 VLA가 기존의 오픈소스 language model들과 같이, 오픈소스여야 하고 효율적인 fine-tuning을 지원해야 한다고 주장한다.
 
-이에 따라 이 논문에서 제안하는 VLA인 [**OpenVLA**](https://openvla.github.io/)(arxiv 2024, 1435회 인용)는 다음과 같은 특징을 가지고, 기존의 SOTA였던 RT-2-X, pretrained model인 Octo를 outperform했다.
+이에 따라 이 논문에서 제안하는 VLA인 [**OpenVLA**](https://openvla.github.io/)(PMLR 2025, 1435회 인용)는 다음과 같은 특징을 가지고, 기존의 SOTA였던 RT-2-X, pretrained model인 Octo를 outperform했다.
 
 1. **pretrained vision-language foundation model을 backbone으로 하고, Open X-Embodiment dataset에서 fine-tuning해 generalization 능력을 갖췄다.**
 2. **오픈소스로 배포된 VLA 모델이다.**
@@ -34,7 +34,7 @@ robototics에서는 로봇의 조작을 위해 이런 VLM을 적용하려는 시
 
 최근 robotics의 트렌드는 multi-task에 대한 처리가 가능한 generalist를 만드는 것이다. OpenVLA 논문에서 언급하는 baseline 모델은 Octo와 RT-2-X가 있다.
 
-- [**Octo**](https://arxiv.org/abs/2405.12213)(arxiv 2024, 831회 인용)는 93M 크기의 오픈소스 VLA이다. 그 아키텍처는 다음 그림과 같다. pretrained language tokenizer로 T5-base를 사용했고, image tokenizer로 CNN을, backbone 모델로는 ViT와 동일한 크기의 transformer를, action decoder로는 diffusion process를 수행하는 action head를 사용했다. 학습 시에는 language tokenizer는 freeze하고 나머지 부분은 pretrain했고, dataset으로는 OXE dataset 중 일부를 선별해 활용했다. 이때 readout token은 action head의 입력으로 사용되는 learnable token으로, BERT의 CLS token과 같은 역할을 가진다. 또한 새로운 로봇에 대한 fine-tuning 시에는 추가적인 observation과 readout/action head를 추가할 수 있다.
+- [**Octo**](https://arxiv.org/abs/2405.12213)(RSS 2024, 831회 인용)는 93M 크기의 오픈소스 VLA이다. 그 아키텍처는 다음 그림과 같다. pretrained language tokenizer로 T5-base를 사용했고, image tokenizer로 CNN을, backbone 모델로는 ViT와 동일한 크기의 transformer를, action decoder로는 diffusion process를 수행하는 action head를 사용했다. 학습 시에는 language tokenizer는 freeze하고 나머지 부분은 pretrain했고, dataset으로는 OXE dataset 중 일부를 선별해 활용했다. 이때 readout token은 action head의 입력으로 사용되는 learnable token으로, BERT의 CLS token과 같은 역할을 가진다. 또한 새로운 로봇에 대한 fine-tuning 시에는 추가적인 observation과 readout/action head를 추가할 수 있다.
 
     Octo는 다른 기기로의 적용과 fine-tuning을 고려하고 있지만, 추가적인 component를 pretrain하여 사용한다. 반면 OpenVLA는 pretrained VLM을 사용하여 더 단순하게 더 좋은 성능을 달성했다.
 
@@ -54,7 +54,7 @@ robototics에서는 로봇의 조작을 위해 이런 VLM을 적용하려는 시
 
 OpenVLA는 RT-2-X처럼 기존 token들 중 256개를 action token으로 해, action token을 예측하도록 Prismatic-7B VLM을 fine-tuning한다. 즉, discrete output language token과 continuous robot action을 mapping한 것으로 볼 수 있다. 이때 action token에는 robot action을 256개의 bin(구간)으로 나눠 mapping한다. bin width는 training data에서 action 값에 대한 백분위수를 사용해 제1백분위수와 제99백분위수 사이를 uniform하게 나누는 값으로 지정한다(RT-2-X와 달리 outlier를 제외한 것.). 이에 따라 LLM token 중 총 256개를 action token으로 사용해야 하는데, Llama tokenizer는 100개의 speical token만을 가지므로 least used token들을 overwrite해 활용한다(이는 가장 마지막 256개의 token이다.).
 
-이후 N차원의 action 값이 필요한 로봇에 대해 예측을 수행한다고 가정하면, autoregressive하게 action token을 하나씩 생성하다가 0~255사이의 정수 값으로 구성되는 총 N개의 action token이 모였을 때 해당 값들로 로봇을 조작한다. 예를 들어, $\Delta x, \Delta y, \Delta z, \Delta roll, \Delta pitch, \Delta yaw, gripper$로 차원이 7인 action 값이 필요한 로봇의 경우 총 해당 값들이 모두 모일 때까지 추론을 반복한다.
+이후 N차원의 action 값이 필요한 로봇에 대해 예측을 수행한다고 가정하면, autoregressive하게 action token을 하나씩 생성해 0~255사이의 정수 값으로 구성되는 총 N개의 action token을 생성한 뒤 해당 값들로 로봇을 조작한다. 예를 들어, $\Delta x, \Delta y, \Delta z, \Delta roll, \Delta pitch, \Delta yaw, gripper$로 차원이 7인 action 값이 필요한 로봇의 경우 한 번의 inference에서는 7개의 값 각각에 대응되는 token을 모두 출력하는 과정이다.
 
 ![](/assets/img/posts/2026-1-6-OpenVLA/OpenVLA arch.png){: width="700"}
 

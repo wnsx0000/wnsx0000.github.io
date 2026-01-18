@@ -10,8 +10,8 @@ order: 1
 
 ### CS & Development
 
-- [TinyML and Efficient Deep Learning Computing](/pdf/personal/Dev_CS/TinyML_and_Efficient_Deep_Learning_Computing_Song_Han_.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span>
-MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fall)](https://hanlab.mit.edu/courses/2024-fall-65940) 강의를 기반으로 정리한  pruning, quantization, NAS, distillation, efficient LLM/ViT/GAN 등 efficient ML/DL 관련 내용
+- [TinyML and Efficient Deep Learning Computing](/pdf/personal/Dev_CS/TinyML_and_Efficient_Deep_Learning_Computing_Song_Han_.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span><br>
+MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fall)](https://hanlab.mit.edu/courses/2024-fall-65940) 강의를 기반으로 정리한   pruning, quantization, knowledge distillation, efficiency of LLMs and vision models 등 efficient ML/DL 관련 내용
 
 - [인공지능 기초](/pdf/personal/Dev_CS/인공지능_기초.pdf) <span style="font-size:0.9em;color:gray;">(81 pages)</span>  
 '인공지능(김창훈)' 수업과 [모두를 위한 딥러닝 시즌2-pytorch](https://deeplearningzerotoall.github.io/season2/) 강의, 서울대 이준석 교수님의 [ML/DL(2024-fall)](https://www.youtube.com/watch?v=JpdKTvgrcYQ&list=PL0E_1UqNACXA5u65LBjzFCAVSZ4xuBWqj) 강의를 기반으로 정리한 ML, DL, CNN, RNN, trasformer 등 인공지능 관련 내용

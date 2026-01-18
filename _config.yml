@@ -16,10 +16,10 @@ timezone: Asia/Seoul
 
 title: Jun's Blog # the main title
 
-tagline: On-device ai, ML/DL, CS 등에 대해 공부한 내용을 개인적으로 정리하는 공간입니다. # it will display as the subtitle
+tagline: Efficient ML/DL, AI, CS 등에 대해 공부하고 작업한 내용을 개인적으로 정리하는 공간입니다. # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
-  Efficient ML, AI serving, On-device AI, ML/DL, CS 등에 대해 공부한 내용을 개인적으로 정리하는 공간입니다.
+  Efficient ML/DL, AI, CS 등에 대해 공부하고 작업한 내용을 개인적으로 정리하는 공간입니다.
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
@@ -147,7 +147,7 @@ pwa:
     deny_paths:
       # - "/example"  # URLs match `<SITE_URL>/example/*` will not be cached by the PWA
 
-paginate: 10
+# paginate: 10  # Disabled - not using pagination anymore
 
 # The base URL of your site
 baseurl: ""

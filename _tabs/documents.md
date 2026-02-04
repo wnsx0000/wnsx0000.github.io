@@ -36,56 +36,56 @@ MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fal
 
 ### Junior
 
-- [데이터사이언스(김창훈)](/pdf/college/Junior/데이터사이언스_김창훈_.pdf) <span style="font-size:0.9em;color:gray;">(39 pages)</span>  
+- [**데이터사이언스(김창훈)**](/pdf/college/Junior/데이터사이언스_김창훈_.pdf) <span style="font-size:0.9em;color:gray;">(39 pages)</span>  
 understanding of multiplication, linear equation, vector space, orthogonality, determinant, eigen value/vector, decomposition, SVD, pseudo inverse 등 선형대수학 관련 내용과, 이를 활용한 ML 관련 내용
 
-- [디자인패턴(정진홍)](/pdf/college/Junior/디자인패턴_정진홍_.pdf) <span style="font-size:0.9em;color:gray;">(48 pages)</span>  
+- [**디자인패턴(정진홍)**](/pdf/college/Junior/디자인패턴_정진홍_.pdf) <span style="font-size:0.9em;color:gray;">(48 pages)</span>  
 singleton, factory, abstract factory, builder, prototype 등 creational DP, adapter, bridge, composite, decorator, facade, flyweight, proxy 등 structural DP, CoR, command, interpreter, iterator, state, strategy, mediator, memento, observer, template method, visitory 등 behavior DP 관련 내용
 
-- [소프트웨어분석및설계(정진홍)](/pdf/college/Junior/소프트웨어분석및설계_정진홍_.pdf) <span style="font-size:0.9em;color:gray;">(39 pages)</span>  
+- [**소프트웨어분석및설계(정진홍)**](/pdf/college/Junior/소프트웨어분석및설계_정진홍_.pdf) <span style="font-size:0.9em;color:gray;">(39 pages)</span>  
 software analysis and design, requirment analysis, use-case anaylsis, domain model, SSD, package/class/sequence/communication/state-machine/activity diagram, SOLID 등
 
-- [네트워크프로그래밍(주경호)](/pdf/college/Junior/네트워크프로그래밍_주경호_.pdf) <span style="font-size:0.9em;color:gray;">(98 pages)</span>  
+- [**네트워크프로그래밍(주경호)**](/pdf/college/Junior/네트워크프로그래밍_주경호_.pdf) <span style="font-size:0.9em;color:gray;">(98 pages)</span>  
 network layer, IPv4, Forwarding, ARP, ICMPv4, unicast routing protocol, transport layer, UDP, TCP, application layer, HTTP, DNS, wirless network 등
 
-- [시스템프로그래밍(한승훈)](/pdf/college/Junior/시스템프로그래밍_한승훈_.pdf) <span style="font-size:0.9em;color:gray;">(51 pages)</span>    
+- [**시스템프로그래밍(한승훈)**](/pdf/college/Junior/시스템프로그래밍_한승훈_.pdf) <span style="font-size:0.9em;color:gray;">(51 pages)</span>    
 POSIX, memory representation, linking, process, I/O, shell, memory management, function, signal, synchronization 등
 
-- [프로그래밍언어(양승민)](/pdf/college/Junior/프로그래밍언어_양승민_.pdf) <span style="font-size:0.9em;color:gray;">(52 pages)</span>    
+- [**프로그래밍언어(양승민)**](/pdf/college/Junior/프로그래밍언어_양승민_.pdf) <span style="font-size:0.9em;color:gray;">(52 pages)</span>    
 PL, lexical analysis, syntax analysis, variable(binding), data types, ADT, OOP, concurrency, exception/event handling, subprogram 등
 
-- [데이터베이스(이상호)](/pdf/college/Junior/데이터베이스_이상호_.pdf) <span style="font-size:0.9em;color:gray;">(66 pages)</span>    
+- [**데이터베이스(이상호)**](/pdf/college/Junior/데이터베이스_이상호_.pdf) <span style="font-size:0.9em;color:gray;">(66 pages)</span>    
 DB, relational data model, SQL, DBMS, DB application development, ER data model, DB design theory 등
 
 ### Sophomore
-- [운영체제(공영호)](/pdf/college/Sophomore/운영체제_공영호_.pdf) <span style="font-size:0.9em;color:gray;">(61 pages)</span>  
+- [**운영체제(공영호)**](/pdf/college/Sophomore/운영체제_공영호_.pdf) <span style="font-size:0.9em;color:gray;">(61 pages)</span>  
 프로세스, 컴퓨터구조, CPU 스케줄링, 스레드, 동기화, 메모리, 파일시스템 등
 
-- [컴퓨터구조(공영호)](/pdf/college/Sophomore/컴퓨터구조_공영호_.pdf) <span style="font-size:0.9em;color:gray;">(70 pages)</span>  
+- [**컴퓨터구조(공영호)**](/pdf/college/Sophomore/컴퓨터구조_공영호_.pdf) <span style="font-size:0.9em;color:gray;">(70 pages)</span>  
 성능, 정수/실수의 처리, ISA(RISC-V)의 연산/조건/반복/프로시저, 프로세서의 datapath/pipeline, 메모리/캐시/VM 등
 
-- [데이터통신과네트워크(주경호)](/pdf/college/Sophomore/데이터통신과네트워크_주경호_.pdf) <span style="font-size:0.9em;color:gray;">(82 pages)</span>  
+- [**데이터통신과네트워크(주경호)**](/pdf/college/Sophomore/데이터통신과네트워크_주경호_.pdf) <span style="font-size:0.9em;color:gray;">(82 pages)</span>  
 네트워크, 프로토콜, phyiscal layer(digital/analog transmission, bandwidth utilization, switching), data link layer(error detection/correction, DLC, MAC), IEEE 802 등
 
-- [객체지향프로그래밍(최지웅)](/pdf/college/Sophomore/객체지향프로그래밍_최지웅_.pdf) <span style="font-size:0.9em;color:gray;">(65 pages)</span>  
+- [**객체지향프로그래밍(최지웅)**](/pdf/college/Sophomore/객체지향프로그래밍_최지웅_.pdf) <span style="font-size:0.9em;color:gray;">(65 pages)</span>  
 java 기본 문법, 객체지향 프로그래밍, 패키지와 class(java.lang, 문자열 처리, Collection 등), 예외처리 등
 
-- [자료구조(정진홍)](/pdf/college/Sophomore/자료구조_정진홍_.pdf) <span style="font-size:0.9em;color:gray;">(64 pages)</span>  
+- [**자료구조(정진홍)**](/pdf/college/Sophomore/자료구조_정진홍_.pdf) <span style="font-size:0.9em;color:gray;">(64 pages)</span>  
 알고리즘 효율 분석 방법, c++ 기본 문법, 재귀 알고리즘, 스택/큐/덱/리스트/BST/PQ/heap/disjoint set/hash map 등
 
-- [알고리즘(최지웅)](/pdf/college/Sophomore/알고리즘_최지웅_.pdf) <span style="font-size:0.9em;color:gray;">(50 pages)</span>  
+- [**알고리즘(최지웅)**](/pdf/college/Sophomore/알고리즘_최지웅_.pdf) <span style="font-size:0.9em;color:gray;">(50 pages)</span>  
 성능 분석, 분할 정복, DP, greedy, backtracking, branch and bound 등
 
-- [데이터분석기초_R(최종석)](/pdf/college/Sophomore/데이터분석기초_R__최종석_.pdf) <span style="font-size:0.9em;color:gray;">(30 pages)</span>  
+- [**데이터분석기초_R(최종석)**](/pdf/college/Sophomore/데이터분석기초_R__최종석_.pdf) <span style="font-size:0.9em;color:gray;">(30 pages)</span>  
 R 기본 문법, R 자료구조, 자료 탐색, 전처리, 시각화(ggplot2 등), 문자열 처리, API/공공데이터포털, 군집화, 회귀분석 등
 
 ### Freshman
-- [프로그래밍기초및실습(김명호)](/pdf/college/Freshman/프로그래밍기초및실습(김명호)_1학년_1학기.pdf) <span style="font-size:0.9em;color:gray;">(107 pages)</span>  
+- [**프로그래밍기초및실습(김명호)**](/pdf/college/Freshman/프로그래밍기초및실습(김명호)_1학년_1학기.pdf) <span style="font-size:0.9em;color:gray;">(107 pages)</span>  
 자료형, 연산자, 조건/반복문, 함수, 배열, 정렬, 문자열 처리, 파일 입출력 등 c 기본 문법
 
-- [프로그래밍응용및실습(김명호)](/pdf/college/Freshman/프로그래밍응용및실습(김명호)_1학년_2학기.pdf) <span style="font-size:0.9em;color:gray;">(89 pages)</span>  
+- [**프로그래밍응용및실습(김명호)**](/pdf/college/Freshman/프로그래밍응용및실습(김명호)_1학년_2학기.pdf) <span style="font-size:0.9em;color:gray;">(89 pages)</span>  
 포인터, 사용자 정의형, 비트 단위 처리, 전처리기, 입출력 등 c 기본 문법
 
-- [리눅스시스템관리(최형광)](/pdf/college/Freshman/리눅스시스템관리(최형광)_1학년_1학기.pdf) <span style="font-size:0.9em;color:gray;">(149 pages)</span>  
+- [**리눅스시스템관리(최형광)**](/pdf/college/Freshman/리눅스시스템관리(최형광)_1학년_1학기.pdf) <span style="font-size:0.9em;color:gray;">(149 pages)</span>  
 리눅스 기본 명령어, 프로세스, 파일시스템, 부팅, 소프트웨어, 사용자, 네트워크 관리 등
 

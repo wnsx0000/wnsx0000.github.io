@@ -15,8 +15,8 @@ layout: page
 
 ## 🚀 Personal Study
 
-- [Doit!깃&깃허브입문](/pdf/personal/Dev_CS/Doit!깃&깃허브입문_1학년_여름방학.pdf)
-- [Dreamhack 강의 요약본](/pdf/personal/Dev_CS/Dreamhack_강의_요약본.pdf)
+- [Doit!깃&깃허브입문](/pdf/personal/Others/Doit!깃&깃허브입문_1학년_여름방학.pdf)
+- [Dreamhack 강의 요약본](/pdf/personal/Others/Dreamhack_강의_요약본.pdf)
 
 ## 📚 College Study
 

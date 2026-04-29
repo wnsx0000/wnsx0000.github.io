@@ -10,8 +10,8 @@ order: 1
 
 ### ML & Math
 
-- [**(On Progress) Mathematics for Machine Learning**](/pdf/personal/ML_Math/Mathematics_for_Machine_Learning.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span><br>
-[Mathematics for Machine Learning](https://mml-book.github.io/book/mml-book.pdf) 교재를 기반으로 정리한 linear algebra, probability and distribution, machine learning 관련 내용
+- (On Progress) [**Mathematics for Machine Learning**](/pdf/personal/ML_Math/Mathematics_for_Machine_Learning.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span><br>
+'[Mathematics for Machine Learning](https://mml-book.github.io/book/mml-book.pdf)' 교재를 기반으로 정리한 linear algebra, probability and distribution, machine learning 관련 내용
 
 - [**TinyML and Efficient Deep Learning Computing**](/pdf/personal/ML_Math/TinyML_and_Efficient_Deep_Learning_Computing_Song_Han_.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span><br>
 MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fall)](https://hanlab.mit.edu/courses/2024-fall-65940) 강의를 기반으로 정리한 pruning, quantization, knowledge distillation, efficiency of LLMs and vision models 등 efficient ML/DL 관련 내용
@@ -20,7 +20,7 @@ MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fal
 '인공지능(김창훈)' 수업과 [모두를 위한 딥러닝 시즌2-pytorch](https://deeplearningzerotoall.github.io/season2/) 강의, 서울대 이준석 교수님의 [ML/DL(2024-fall)](https://www.youtube.com/watch?v=JpdKTvgrcYQ&list=PL0E_1UqNACXA5u65LBjzFCAVSZ4xuBWqj) 강의를 기반으로 정리한 ML, DL, CNN, RNN, trasformer 등 인공지능 관련 내용
 
 - [**프리드버그 선형대수학**](/pdf/personal/ML_Math/프리드버그_선형대수학.pdf) <span style="font-size:0.9em;color:gray;">(97 pages)</span>  
-'선형대수학(프리드버그)' 교재를 기반으로 정리한 벡터공간, 선형변환, 행렬, 연립일차방정식, 행렬식, 대각화, 내적공간, 직교화, 직교여공간, 정사영, 스펙트럼 정리 등 선형대수학 관련 내용
+'[Linear Algebra](https://www.google.co.kr/books/edition/%ED%94%84%EB%A6%AC%EB%93%9C%EB%B2%84%EA%B7%B8_%EC%84%A0%ED%98%95%EB%8C%80%EC%88%98%ED%95%99/qPRcEAAAQBAJ?hl=ko&gbpv=0)' 교재를 기반으로 정리한 벡터공간, 선형변환, 행렬, 연립일차방정식, 행렬식, 대각화, 내적공간, 직교화, 직교여공간, 정사영, 스펙트럼 정리 등 선형대수학 관련 내용
 
 ### Others
 

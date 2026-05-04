@@ -10,7 +10,7 @@ order: 1
 
 ### ML & Math
 
-- (On Progress) [**Mathematics for Machine Learning**](/pdf/personal/ML_Math/Mathematics_for_Machine_Learning.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span><br>
+- (On Progress) [**Mathematics for Machine Learning**](/pdf/personal/ML_Math/Mathematics_for_Machine_Learning.pdf) <span style="font-size:0.9em;color:gray;">(110 pages)</span><br>
 '[Mathematics for Machine Learning](https://mml-book.github.io/book/mml-book.pdf)' 교재를 기반으로 정리한 linear algebra, probability and distribution, machine learning 관련 내용
 
 - [**TinyML and Efficient Deep Learning Computing**](/pdf/personal/ML_Math/TinyML_and_Efficient_Deep_Learning_Computing_Song_Han_.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span><br>

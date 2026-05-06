@@ -10,8 +10,8 @@ order: 1
 
 ### ML & Math
 
-- (On Progress) [**Mathematics for Machine Learning**](/pdf/personal/ML_Math/Mathematics_for_Machine_Learning.pdf) <span style="font-size:0.9em;color:gray;">(110 pages)</span><br>
-'[Mathematics for Machine Learning](https://mml-book.github.io/book/mml-book.pdf)' 교재를 기반으로 정리한 linear algebra, probability and distribution, machine learning 관련 내용
+- [**Mathematics for Machine Learning**](/pdf/personal/ML_Math/Mathematics_for_Machine_Learning.pdf) <span style="font-size:0.9em;color:gray;">(130 pages)</span><br>
+'[Mathematics for Machine Learning](https://mml-book.github.io/book/mml-book.pdf)' 교재를 기반으로 정리한 linear algebra, vector calculus, probability and distribution, continuous optimization machine learning(linear regression, PCA, gaussian mixture model, binary classification) 관련 내용
 
 - [**TinyML and Efficient Deep Learning Computing**](/pdf/personal/ML_Math/TinyML_and_Efficient_Deep_Learning_Computing_Song_Han_.pdf) <span style="font-size:0.9em;color:gray;">(106 pages)</span><br>
 MIT Song Han 교수님의 [TinyML and Efficient Deep Learning Computing(2024-fall)](https://hanlab.mit.edu/courses/2024-fall-65940) 강의를 기반으로 정리한 pruning, quantization, knowledge distillation, efficiency of LLMs and vision models 등 efficient ML/DL 관련 내용

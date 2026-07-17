@@ -24,3 +24,5 @@ nav:
  - name: "Blog"
    link: "https://wnsx0000.github.io/blog/"
    new_tab: yes
+- name: "Contact"
+   link: "contact.html"

@@ -4,6 +4,13 @@
     a:hover {
         text-decoration: underline;
     }
+    /* Trailing space after each section */
+    h2:not(:first-child) {
+        margin-top: 45px;
+    }
+    hr {
+        margin-top: 45px;
+    }
     ol {
         counter-reset: list;
     }

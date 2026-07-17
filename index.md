@@ -6,20 +6,24 @@ layout: default
 
 <img class="profile-picture" src="junhyeok.jpg">
 
-Hi! I am a junior year student of B.E. Computer Science at Birla Institute of Technology and Science, Pilani.
+Hi! I am Junhyeok Lee, a senior year student of B.S. in Software at Soongsil University, and an incoming M.S. student in Artificial Intelligence at POSTECH.
 
-This is a jekyll based resume template. You can find the full source code on [GitHub](https://github.com/bk2dcradle/researcher)
+I am currently an undergraduate research intern at the [Efficient Learning Lab (EffL)](https://effl.postech.ac.kr/) at POSTECH, advised by Prof. Jaeho Lee.
 
 ## Research Interest
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam finibus ipsum ac erat aliquam dapibus. Vestibulum vehicula placerat ex, a consectetur odio pharetra quis. Mauris id urna ante. Fusce pharetra diam ac nisi aliquet, vel egestas ex iaculis. Pellentesque laoreet cursus tellus sed pellentesque. Praesent a rhoncus elit. Nunc ipsum nisl, consequat sit amet pretium quis, gravida id ipsum.
+My research interest is **Efficient ML**, with a focus on efficient inference, efficient VLMs, and streaming video understanding.
+
+## Education
+
+- **M.S. in Artificial Intelligence**, Pohang University of Science and Technology (POSTECH), Sep. 2026 - Aug. 2028
+- **B.S. in Software**, Soongsil University, Mar. 2021 - Aug. 2026
 
 ## Publications
 
-1. F.Bar, J.Doe: Effects of having a placeholder of a name
-2. S.Holmes, J.Watson: Consequences of living with a sociopath in London
+1. Hyeonjun Kim, Jegwang Ryu, Sangbeom Ha, **Junhyeok Lee**, Jun-Hyuk Kim, Hyemin Ahn, Jaeho Lee. "Learned Image Compression for Vision-Language-Action Models", *arXiv preprint*, 2026. [[arXiv](https://arxiv.org/abs/2606.16253)]
 
-## Typography
+<!-- ## Typography
 
 This is a [link](http://google.com). Something *italics* and something **bold**.
 
@@ -42,4 +46,4 @@ Here is a blockquote
 ## References
 
 * Foo Bar: Head of Department, Placeholder Names, Lorem
-* John Doe: Associate Professor, Department of Computer Science, Ipsum
+* John Doe: Associate Professor, Department of Computer Science, Ipsum -->

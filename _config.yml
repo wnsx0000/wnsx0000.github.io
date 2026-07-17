@@ -20,5 +20,7 @@ nav:
    link: "/"
  - name: "Resume"
    link: "resume.pdf"
- - name: "Contact"
-   link: "contact"
+   new_tab: yes
+ - name: "Blog"
+   link: "https://wnsx0000.github.io/blog/"
+   new_tab: yes

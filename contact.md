@@ -3,11 +3,13 @@ layout: default
 is_contact: true
 ---
 
-* Email: [foo@xyz.com](mailto:foo@xyz.com)
+* Email: [wnsx0000@gmail.com](mailto:wnsx0000@gmail.com)
 
-* Phone: [+91-123123](tel:+91-123123)
+* Github: [wnsx0000](https://github.com/wnsx0000)
 
----
+* Linkedin: [Junhyeok Lee](https://www.linkedin.com/in/junhyeok-lee-a48682385/)
+
+<!-- ---
 
 ## Mailing Address
 
@@ -23,4 +25,4 @@ is_contact: true
 
 1. [Facebook](#)
 2. [Twitter](#)
-3. [Google+](#)
+3. [Google+](#) -->

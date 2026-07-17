@@ -4,11 +4,13 @@ layout: default
 
 ## About Me
 
-<img class="profile-picture" src="junhyeok.jpg">
+<img class="profile-picture" src="junhyeok.png">
 
 Hi! I am Junhyeok Lee, a senior year student of B.S. in Software at Soongsil University, and an incoming M.S. student in Artificial Intelligence at POSTECH.
 
 I am currently an undergraduate research intern at the [Efficient Learning Lab (EffL)](https://effl.postech.ac.kr/) at POSTECH, advised by Prof. Jaeho Lee.
+
+[Email](mailto:wnsx0000@gmail.com) \| [GitHub](https://github.com/wnsx0000) \| [LinkedIn](https://www.linkedin.com/in/junhyeok-lee-a48682385/) \| [CV](resume.pdf)
 
 ## Research Interest
 

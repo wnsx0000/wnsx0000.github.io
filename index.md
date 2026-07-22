@@ -12,7 +12,7 @@ I am currently an undergraduate research intern at the [Efficient Learning Lab (
 
 ## Research Interest
 
-My research interest is **Efficient ML**, with a focus on efficient inference, VLMs, and streaming video understanding.
+My research interest is **Efficient ML/DL**, with a focus on efficient inference, VLMs, and streaming video understanding.
 
 ## Education
 

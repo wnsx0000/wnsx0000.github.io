@@ -12,11 +12,11 @@ I am currently an undergraduate research intern at the [Efficient Learning Lab (
 
 ## Research Interest
 
-My research interest is **Efficient ML**, with a focus on efficient inference, efficient VLMs, and streaming video understanding.
+My research interest is **Efficient ML**, with a focus on efficient inference, VLMs, and streaming video understanding.
 
 ## Education
 
-- **M.S. in Artificial Intelligence**,
+- **M.S. in Artificial Intelligence**
 
     Pohang University of Science and Technology (POSTECH), Sep. 2026 - Aug. 2028
 

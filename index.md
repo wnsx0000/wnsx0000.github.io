@@ -8,9 +8,9 @@ layout: default
 
 Hi! I am **Junhyeok Lee**, an M.S. student in Artificial Intelligence at [POSTECH](https://www.postech.ac.kr/), where I am a member of the [Efficient Learning Lab (EffL)](https://effl.postech.ac.kr/) advised by Prof. Jaeho Lee. Previously, I received my B.S. in Software from [Soongsil University](https://ssu.ac.kr/).
 
-## Research Interest
+<!-- ## Research Interest -->
 
-My research interest is **Efficient ML/DL**, with a focus on efficient inference, VLMs, and streaming video understanding.
+I'm currently interested in **efficient ML/DL**, with a focus on efficient inference, VLMs, and streaming video understanding.
 
 ## Education
 

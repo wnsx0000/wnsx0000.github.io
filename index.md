@@ -6,9 +6,7 @@ layout: default
 
 <img class="profile-picture" src="junhyeok.png">
 
-Hi! I am **Junhyeok Lee**, an M.S. student in Artificial Intelligence at [POSTECH](https://www.postech.ac.kr/kor/index.do). Previously, I received my B.S. in Software from [Soongsil University](https://ssu.ac.kr/).
-
-I am currently an undergraduate research intern at the [Efficient Learning Lab (EffL)](https://effl.postech.ac.kr/) at POSTECH, advised by Prof. Jaeho Lee.
+Hi! I am **Junhyeok Lee**, an M.S. student in Artificial Intelligence at [POSTECH](https://www.postech.ac.kr/), where I am a member of the [Efficient Learning Lab (EffL)](https://effl.postech.ac.kr/) advised by Prof. Jaeho Lee. Previously, I received my B.S. in Software from [Soongsil University](https://ssu.ac.kr/).
 
 ## Research Interest
 

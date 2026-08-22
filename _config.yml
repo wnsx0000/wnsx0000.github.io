@@ -21,8 +21,10 @@ nav:
  - name: "Resume"
    link: "resume.pdf"
    new_tab: yes
- - name: "Blog"
-   link: "https://wnsx0000.github.io/blog/"
-   new_tab: yes
  - name: "Contact"
    link: "contact.html"
+
+
+ # - name: "Blog"
+ #   link: "https://wnsx0000.github.io/blog/"
+ #   new_tab: yes

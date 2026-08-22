@@ -5,7 +5,7 @@ is_contact: true
 
 ## Contact
 
-* Email: [wnsx0000@gmail.com](mailto:wnsx0000@gmail.com)
+* Email: [jhlee0310@postech.co.kr](mailto:jhlee0310@postech.co.kr), [wnsx0000@gmail.com](mailto:wnsx0000@gmail.com)
 
 * Github: [wnsx0000](https://github.com/wnsx0000)
 
